@@ -16,7 +16,7 @@ namespace IntegrationTest
 
         public static void Main(string[] args)
         {
-            object responseData = null;
+            List<CustomerDto> responseData = null;
             var customer = GetCustomer();
             var customerData = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, "application/json");
             using (var httpClient = new HttpClient())
@@ -32,7 +32,11 @@ namespace IntegrationTest
                 else
                 {
                     var data = response.Content.ReadAsStringAsync().Result;
-                    responseData = JsonConvert.DeserializeObject<CustomerDto>(data, IgnoreNullSettings());
+                    var serDatta = JsonConvert.DeserializeObject<CustomerDto>(data, IgnoreNullSettings());
+                    responseData = new List<CustomerDto>()
+                    {
+                        serDatta
+                    };
                 }                
             }
 

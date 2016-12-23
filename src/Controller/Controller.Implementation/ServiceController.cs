@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Description;
 using AutoMapper;
 using Controller.Implementation.AutoMapperConfigMapper;
-using Controller.Implementation.CustomActionResult;
 using Controller.Interface;
 using Domains;
 using Dto;
@@ -24,23 +22,39 @@ namespace Controller.Implementation
             _mapper = dtoDomainMapper.ConfigureMap();
         }
 
+        /// <summary>
+        /// Provide Response
+        /// </summary>
+        /// <returns>Success Response</returns>
+        [ResponseType(typeof(string))]
         public IHttpActionResult GetData()
         {
             return Ok(_service.GetData());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Get List of Customers</returns>
+        [ResponseType(typeof(IEnumerable<CustomerDto>))]
         public IHttpActionResult GetCustomers()
         {
-            throw new Exception();
+            // throw new Exception();
 
-            return new InternalServerErrorActionResult("InvalidError", new List<string> { "Invalid Error" });
+            // return new InternalServerErrorActionResult("InvalidError", new List<string> { "Invalid Error" });
 
             var domainCustomers = _service.GetCustomers();
 
             return Ok(domainCustomers.Select(domainCustomer => _mapper.Map<Customer, CustomerDto>(domainCustomer)).ToList());
         }
 
-        [HttpPost]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        [HttpPost]        
+        [ResponseType(typeof(CustomerDto))]
         public IHttpActionResult SaveCustomer(CustomerDto customer)
         {
             // throw new Exception();

@@ -8,16 +8,22 @@ using DependencyRegisterResolver;
 
 namespace WebApplication1
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class WebApiConfig
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="config"></param>
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
             var container = new UnityContainerRegister().Register();
 
             config.DependencyResolver = new CustomContainerResolver(container);
-
-
+            
             // Web API routes
             config.MapHttpAttributeRoutes();
 
@@ -31,12 +37,13 @@ namespace WebApplication1
 
             config.Services.Add(typeof(IFilterProvider), new CustomFilterProvider());
             
-
             config.Filters.Add(new CustomExceptionFilter());
 
             config.Services.Replace(typeof(IExceptionLogger), new CustomExceptionLogger());
 
             config.Services.Replace(typeof(IExceptionHandler), new CustomExceptionHandler());
+
+            SwaggerConfig.Register();
         }
     }
 }
