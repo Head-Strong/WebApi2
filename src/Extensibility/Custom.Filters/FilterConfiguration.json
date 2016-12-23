@@ -1,0 +1,14 @@
+﻿[
+  {
+    "ActionName": "post",
+    "ControllerName": "customer",
+    "Filter": "CustomAuthorizeAttribute",
+    "Roles": [ "read", "write" ]
+  },
+  {
+    "ActionName": "getdata",
+    "ControllerName": "Service",
+    "Filter": "CustomAuthorizeAttribute",
+    "Roles": [ "read", "write" ]
+  }
+]

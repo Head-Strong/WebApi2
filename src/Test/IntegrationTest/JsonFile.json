@@ -1,0 +1,17 @@
+﻿{
+  "Id": 8,
+  "Name": "Adi",
+  "LastName": "Mag",
+  "Addresses": [
+    {
+      "AddressId": 4,
+      "CustomerId": 8,
+      "Pin": "560035"
+    },
+    {
+      "AddressId": 5,
+      "CustomerId": 8,
+      "Pin": "560037"
+    }
+  ]
+}
