@@ -119,6 +119,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <EmbeddedResource Include="swagger\index.html" />
+    <EmbeddedResource Include="swagger\swagger.css" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

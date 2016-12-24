@@ -4,8 +4,18 @@ using System.Net.Http;
 
 namespace Dto
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ErrorBuilder
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="httpResponseMessage"></param>
+        /// <param name="errorCategory"></param>
+        /// <param name="errorDescriptions"></param>
+        /// <returns></returns>
         public static HttpResponseMessage InternalServerError(this HttpResponseMessage httpResponseMessage,
             string errorCategory, List<string> errorDescriptions)
         {
@@ -15,6 +25,13 @@ namespace Dto
             return httpResponseMessage;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="httpResponseMessage"></param>
+        /// <param name="errorCategory"></param>
+        /// <param name="errorDescriptions"></param>
+        /// <returns></returns>
         public static HttpResponseMessage AuthorizationError(this HttpResponseMessage httpResponseMessage,
             string errorCategory, List<string> errorDescriptions)
         {

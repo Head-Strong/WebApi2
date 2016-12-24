@@ -35,7 +35,7 @@ namespace WebApplication1
                         // hold additional metadata for an API. Version and title are required but you can also provide
                         // additional fields by chaining methods off SingleApiVersion.
                         //
-                        c.SingleApiVersion("v1", "WebApplication1");
+                        c.SingleApiVersion("v1", "Customer Api");
 
                         // If your API has multiple versions, use "MultipleApiVersions" instead of "SingleApiVersion".
                         // In this case, you must provide a lambda that tells Swashbuckle which actions should be
@@ -101,7 +101,7 @@ namespace WebApplication1
                         // more Xml comment files.
                         //
                         c.IncludeXmlComments(GetXmlCommentsPath());
-
+                        c.IncludeXmlComments(GetDtoXmlCommentsPath());
                         // Swashbuckle makes a best attempt at generating Swagger compliant JSON schemas for the various types
                         // exposed in your API. However, there may be occasions when more control of the output is needed.
                         // This is supported through the "MapType" and "SchemaFilter" options:
@@ -182,7 +182,8 @@ namespace WebApplication1
                         // The file must be included in your project as an "Embedded Resource", and then the resource's
                         // "Logical Name" is passed to the method as shown below.
                         //
-                        //c.InjectStylesheet(containingAssembly, "Swashbuckle.Dummy.SwaggerExtensions.testStyles1.css");
+                        c.InjectStylesheet(thisAssembly, "WebApplication1.swagger.swagger.css");
+                        c.CustomAsset("index",thisAssembly, "WebApplication1.swagger.index.html");
 
                         // Use the "InjectJavaScript" option to invoke one or more custom JavaScripts after the swagger-ui
                         // has loaded. The file must be included in your project as an "Embedded Resource", and then the resource's
@@ -248,7 +249,12 @@ namespace WebApplication1
 
         private static string GetXmlCommentsPath()
         {
-            return $@"{AppDomain.CurrentDomain.BaseDirectory}\bin\WebApplication1.xml";
+            return $@"{AppDomain.CurrentDomain.BaseDirectory}\bin\Controller.Implementation.XML";
+        }
+
+        private static string GetDtoXmlCommentsPath()
+        {
+            return $@"{AppDomain.CurrentDomain.BaseDirectory}\bin\\Dto.XML";
         }
     }
 }

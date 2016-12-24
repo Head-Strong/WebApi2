@@ -33,7 +33,7 @@ namespace Controller.Implementation
         }
 
         /// <summary>
-        /// 
+        /// Get Customers
         /// </summary>
         /// <returns>Get List of Customers</returns>
         [ResponseType(typeof(IEnumerable<CustomerDto>))]
@@ -49,10 +49,10 @@ namespace Controller.Implementation
         }
 
         /// <summary>
-        /// 
+        /// Save Customer
         /// </summary>
-        /// <param name="customer"></param>
-        /// <returns></returns>
+        /// <param name="customer">Customer</param>
+        /// <returns>Saved Customer</returns>
         [HttpPost]        
         [ResponseType(typeof(CustomerDto))]
         public IHttpActionResult SaveCustomer(CustomerDto customer)

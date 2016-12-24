@@ -1,0 +1,6 @@
+﻿#api_selector, .logo__title, #logo {
+    display: none !important;
+}
+#header {
+    background-color: black !important;
+}

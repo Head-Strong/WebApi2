@@ -1,14 +1,23 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace Dto
+﻿namespace Dto
 {
+    /// <summary>
+    /// Address Details
+    /// </summary>
     public class AddressDto
     {
+        /// <summary>
+        /// Address Id
+        /// </summary>
         public int AddressId { get; set; }
 
+        /// <summary>
+        /// Customer Id
+        /// </summary>
         public int CustomerId { get; set; }
 
+        /// <summary>
+        /// Pin
+        /// </summary>
         public string Pin { get; set; }        
     }
 }
