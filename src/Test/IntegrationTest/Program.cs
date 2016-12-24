@@ -12,11 +12,11 @@ namespace IntegrationTest
     public static class Program
     {
         private const string SaveUrl = "http://localhost:2967/api/service/SaveCustomer";
-        private const string GetUrl = "http://localhost:2967/api/service/GetCustomers";
+        private const string GetUrl = "http://localhost:2968/api/service/GetCustomers1";
 
         public static void Main(string[] args)
         {
-            List<CustomerDto> responseData = null;
+            var customersResponse = new CustomersResponse();
             var customer = GetCustomer();
             var customerData = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, "application/json");
             using (var httpClient = new HttpClient())
@@ -24,23 +24,31 @@ namespace IntegrationTest
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 //var response = httpClient.PostAsync(SaveUrl, customerData).Result;
                 var response = httpClient.GetAsync(GetUrl).Result;
+
+                List<CustomerDto> responseData = null;
+
                 if (response.IsSuccessStatusCode)
                 {
                     var data = response.Content.ReadAsStringAsync().Result;
                     responseData = JsonConvert.DeserializeObject<List<CustomerDto>>(data, IgnoreNullSettings());
+                    customersResponse.CustomerDtos = responseData;
+                    customersResponse.Status = true;
                 }
                 else
                 {
                     var data = response.Content.ReadAsStringAsync().Result;
-                    var serDatta = JsonConvert.DeserializeObject<CustomerDto>(data, IgnoreNullSettings());
+                    var setData = JsonConvert.DeserializeObject<CustomerDto>(data, IgnoreNullSettings());
                     responseData = new List<CustomerDto>()
                     {
-                        serDatta
+                        setData
                     };
+
+                    customersResponse.CustomerDtos = responseData;
+                    customersResponse.Status = false;
                 }                
             }
 
-            Console.WriteLine(responseData);
+            Console.WriteLine(customersResponse);
             Console.ReadLine();
         }
 
