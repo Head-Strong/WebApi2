@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Response\AddressDto.cs" />
-    <Compile Include="Response\BaseDto.cs" />
+    <Compile Include="Response\ErrorDto.cs" />
     <Compile Include="Response\CustomerDto.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace IntegrationTest.Response
 {
-    public class BaseDto
+    public class ErrorDto
     {
         [JsonProperty("ErrorDescriptions")]
         public List<string> ErrorDescriptions { get; set; }

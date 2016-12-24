@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IntegrationTest.Response
 {
-    public class CustomerDto : BaseDto
+    public class CustomerDto
     {
         [JsonProperty("Id")]
         public int Id { get; set; }

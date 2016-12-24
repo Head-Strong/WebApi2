@@ -12,7 +12,7 @@ namespace IntegrationTest
     public static class Program
     {
         private const string SaveUrl = "http://localhost:2967/api/service/SaveCustomer";
-        private const string GetUrl = "http://localhost:2968/api/service/GetCustomers1";
+        private const string GetUrl = "http://localhost:2967/api/service/GetCustomers";
 
         public static void Main(string[] args)
         {
@@ -32,19 +32,14 @@ namespace IntegrationTest
                     var data = response.Content.ReadAsStringAsync().Result;
                     responseData = JsonConvert.DeserializeObject<List<CustomerDto>>(data, IgnoreNullSettings());
                     customersResponse.CustomerDtos = responseData;
-                    customersResponse.Status = true;
+                    customersResponse.Status = response.StatusCode;
                 }
                 else
                 {
                     var data = response.Content.ReadAsStringAsync().Result;
-                    var setData = JsonConvert.DeserializeObject<CustomerDto>(data, IgnoreNullSettings());
-                    responseData = new List<CustomerDto>()
-                    {
-                        setData
-                    };
-
-                    customersResponse.CustomerDtos = responseData;
-                    customersResponse.Status = false;
+                    var errorDto = JsonConvert.DeserializeObject<ErrorDto>(data, IgnoreNullSettings());
+                    customersResponse.ErrorDto = errorDto;
+                    customersResponse.Status = response.StatusCode;
                 }                
             }
 

@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Net;
 
 namespace IntegrationTest.Response
 {
     public class CustomersResponse
     {
-        [JsonProperty("CustomerDto")]
         public IEnumerable<CustomerDto> CustomerDtos { get; set; }
 
-        public bool Status { get; set; }
+        public HttpStatusCode Status { get; set; }
+
+        public ErrorDto ErrorDto { get; set; }
     }
 }
