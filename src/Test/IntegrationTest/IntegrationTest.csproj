@@ -48,11 +48,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Response\AddressDto.cs" />
+    <Compile Include="Response\BaseResponse.cs" />
+    <Compile Include="Response\CustomerSaveResponse.cs" />
     <Compile Include="Response\ErrorDto.cs" />
     <Compile Include="Response\CustomerDto.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Response\CustomersResponse.cs" />
+    <Compile Include="Response\CustomersGetResponse.cs" />
+    <Compile Include="Retrier.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

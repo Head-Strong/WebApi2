@@ -16,5 +16,10 @@ namespace IntegrationTest.Response
 
         [JsonProperty("Addresses")]
         public List<AddressDto> Addresses { get; set; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

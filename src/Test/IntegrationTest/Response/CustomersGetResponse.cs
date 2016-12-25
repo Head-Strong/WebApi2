@@ -3,13 +3,9 @@ using Newtonsoft.Json;
 
 namespace IntegrationTest.Response
 {
-    public class ErrorDto
+    public class CustomersGetResponse : BaseResponse
     {
-        [JsonProperty("ErrorDescriptions")]
-        public List<string> ErrorDescriptions { get; set; }
-
-        [JsonProperty("ErrorCategory")]
-        public string ErrorCategory { get; set; }
+        public IEnumerable<CustomerDto> CustomerDtos { get; set; }
 
         public override string ToString()
         {

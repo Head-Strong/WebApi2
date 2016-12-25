@@ -12,5 +12,10 @@ namespace IntegrationTest.Response
 
         [JsonProperty("Pin")]
         public string Pin { get; set; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }
