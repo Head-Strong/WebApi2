@@ -47,9 +47,16 @@ namespace IntegrationTest
 
             var errorProperty = typeofTresult.GetProperty("Status");
 
+            var errorCategory = typeofTresult.GetProperty("ErrorDto.ErrorCategory");
+
             if (errorProperty != null)
             {
                 errorProperty.SetValue(result, HttpStatusCode.NotFound);
+            }
+
+            if (errorCategory != null)
+            {
+                errorCategory.SetValue(result,"NotAbletoConnect");
             }
 
             return result;

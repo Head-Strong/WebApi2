@@ -15,6 +15,8 @@ namespace Custom.Filters.Models
 
             var fileName = HttpRuntime.BinDirectory + @"FilterConfiguration.json";
 
+            // var fileName = "G://Git//WebApi2//src//Test//UnitTesting//FilterConfiguration.json";
+
             if (!File.Exists(fileName))
             {
                 throw new FileNotFoundException(nameof(fileName));

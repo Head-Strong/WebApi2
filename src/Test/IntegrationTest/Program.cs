@@ -18,8 +18,8 @@ namespace IntegrationTest
 
         public static void Main(string[] args)
         {
-            var retrier = new Retrier<CustomersGetResponse>();
-            var resultResponse = retrier.RetryWithDelay(GetCustomerResponse);
+            // var retrier = new Retrier<CustomersGetResponse>();
+            // var resultResponse = retrier.RetryWithDelay(GetCustomerResponse);
 
             int continueVaribale;
             do
