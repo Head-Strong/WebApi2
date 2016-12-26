@@ -13,9 +13,9 @@ namespace Custom.Filters.Models
         {
             if (_filterConfigurations != null) return _filterConfigurations;
 
-            var fileName = HttpRuntime.BinDirectory + @"FilterConfiguration.json";
+            //var fileName = HttpRuntime.BinDirectory + @"FilterConfiguration.json";
 
-            // var fileName = "G://Git//WebApi2//src//Test//UnitTesting//FilterConfiguration.json";
+            var fileName = "G://Git//WebApi2//src//Test//UnitTesting//bin//Debug//FilterConfiguration.json";
 
             if (!File.Exists(fileName))
             {

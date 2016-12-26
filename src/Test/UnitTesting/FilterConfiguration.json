@@ -1,8 +1,0 @@
-﻿[
-  {
-    "ActionName": "get",
-    "ControllerName": "TestController",
-    "Filter": "CustomAuthorizeAttribute",
-    "Roles": [ "read", "write" ]
-  }
-]

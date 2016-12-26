@@ -72,9 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Content Include="FilterConfiguration.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +86,10 @@
     <ProjectReference Include="..\..\Service\Service.Implementation\Service.Implementation.csproj">
       <Project>{8AC194F0-B7DF-43B8-871C-D4CCB03202AD}</Project>
       <Name>Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Service\Service.Interface\Service.Interface.csproj">
+      <Project>{2336297E-4FE9-4FE1-986B-0BEF1D267002}</Project>
+      <Name>Service.Interface</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

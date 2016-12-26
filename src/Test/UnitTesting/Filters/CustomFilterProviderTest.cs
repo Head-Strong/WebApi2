@@ -6,9 +6,11 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Controller.Implementation;
+using Controller.Implementation.AutoMapperConfigMapper;
 using Custom.Filters;
 using Moq;
 using NUnit.Framework;
+using Service.Interface;
 
 namespace UnitTesting.Filters
 {
@@ -19,12 +21,15 @@ namespace UnitTesting.Filters
         public void Test()
         {
             var config = new HttpConfiguration();
-            
+
             var filterProvider = new CustomFilterProvider();
 
-            var mockActionMethodInfo = new TestController().GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance).FirstOrDefault(x => x.Name.Equals("Get"));
+            var mockActionMethodInfo = new ServiceController(new Mock<IService>().Object, new DtoDomainMapper())
+                                        .GetType()
+                                        .GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                                        .FirstOrDefault(x => x.Name.Equals("getdata", StringComparison.OrdinalIgnoreCase));
 
-            var controllerDescriptor = new HttpControllerDescriptor(config, "TestController", typeof(TestController));
+            var controllerDescriptor = new HttpControllerDescriptor(config, "Service", typeof(ServiceController));
 
             var actionDescriptor = new ReflectedHttpActionDescriptor(controllerDescriptor, mockActionMethodInfo);
 
@@ -35,14 +40,6 @@ namespace UnitTesting.Filters
                 var data = filterInfo;
             }
 
-        }       
-    }
-
-    public class TestController : ApiController
-    {
-        public IHttpActionResult Get()
-        {
-            return null;
         }
     }
 }
