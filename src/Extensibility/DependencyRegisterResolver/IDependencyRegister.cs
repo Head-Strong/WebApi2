@@ -1,7 +1,9 @@
 ﻿namespace DependencyRegisterResolver
 {
-    public interface IDependencyRegister<T>
+    internal interface IDependencyRegister<out T>
     {
         T Register();
+
+        T GetContainer { get; }
     }
 }

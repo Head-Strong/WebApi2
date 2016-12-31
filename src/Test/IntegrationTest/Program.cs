@@ -15,11 +15,64 @@ namespace IntegrationTest
     {
         private const string SaveUrl = "http://localhost:2967/api/service/SaveCustomer";
         private const string GetUrl = "http://localhost:2967/api/service/GetCustomers";
+        private const string ServerGetUrl = "http://localhost:80/api/service/getdata";
+        private const string LocalGetUrl = "http://localhost:2967/api/service/getdata";
+
+        private static void TestPing()
+        {
+            for (var i = 1; i <= 500; i++)
+            {
+                //Console.Clear();
+                Console.WriteLine("Ping " + i);
+
+                Console.ForegroundColor = i % 2 == 0 ? ConsoleColor.Red : ConsoleColor.Yellow;
+
+                var allCustomers = GetAllCustomers();
+                if (allCustomers.Status == HttpStatusCode.OK)
+                {
+                    Console.WriteLine("Success for Ping" + i);
+                    foreach (var allCustomersCustomerDto in allCustomers.CustomerDtos)
+                    {
+                        Console.WriteLine(allCustomersCustomerDto.ToString());
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error For Ping:" + i);
+                    Console.WriteLine(allCustomers.ErrorDto.ToString());
+                }
+
+
+
+                //using (var httpClient = new HttpClient())
+                //{
+                //    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //    var response = httpClient.GetAsync(ServerGetUrl).GetAwaiter().GetResult();
+                //    var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                //    Console.WriteLine(data);
+                //    Console.WriteLine("===============");
+                //}
+
+                Console.WriteLine("Ping Finished " + i);
+            }
+        }
 
         public static void Main(string[] args)
         {
             // var retrier = new Retrier<CustomersGetResponse>();
             // var resultResponse = retrier.RetryWithDelay(GetCustomerResponse);
+
+            try
+            {
+                TestPing();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            Console.ReadLine();
+
 
             int continueVaribale;
             do
@@ -96,8 +149,8 @@ namespace IntegrationTest
             using (var httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var response = httpClient.GetAsync(GetUrl).Result;
-                var data = response.Content.ReadAsStringAsync().Result;
+                var response = httpClient.GetAsync(GetUrl).GetAwaiter().GetResult();
+                var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -137,14 +190,17 @@ namespace IntegrationTest
                 pins.Add(Console.ReadLine());
             }
 
+            var sp = ServicePointManager.FindServicePoint(new Uri(""));
+            sp.ConnectionLeaseTimeout = 2000;
+
             var customersResponse = new CustomerSaveResponse();
             var customer = PrepareCustomer(name, lastName, pins);
             var customerData = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, "application/json");
             using (var httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var response = httpClient.PostAsync(SaveUrl, customerData).Result;
-                var data = response.Content.ReadAsStringAsync().Result;
+                var response = httpClient.PostAsync(SaveUrl, customerData).GetAwaiter().GetResult();
+                var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
                 if (response.IsSuccessStatusCode)
                 {

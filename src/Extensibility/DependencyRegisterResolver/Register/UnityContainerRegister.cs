@@ -7,9 +7,9 @@ using Repository.Implementation.AutoMapperConfigMapper;
 using Repository.Interface;
 using Service.Interface;
 
-namespace DependencyRegisterResolver
+namespace DependencyRegisterResolver.Register
 {
-    public class UnityContainerRegister : IDependencyRegister<IUnityContainer>
+    internal class UnityContainerRegister : IDependencyRegister<IUnityContainer>
     {
         private static IUnityContainer _container;
 
@@ -33,7 +33,8 @@ namespace DependencyRegisterResolver
             return _container;
         }
 
-        private void RegisterRepository()
+        #region Helper Methods
+        private static void RegisterRepository()
         {
             _container.RegisterInstance(typeof(TestDatabaseEntities));
 
@@ -44,15 +45,17 @@ namespace DependencyRegisterResolver
                 new HierarchicalLifetimeManager());
         }
 
-        private void RegisterServices()
+        private static void RegisterServices()
         {
             _container.RegisterType<IService, Service.Implementation.Service>(new HierarchicalLifetimeManager());
         }
 
-        private void RegisterController()
+        private static void RegisterController()
         {
             _container.RegisterType<IDtoDomainMapper, DtoDomainMapper>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IServiceController, ServiceController>(new HierarchicalLifetimeManager());
         }
+
+        #endregion
     }
 }

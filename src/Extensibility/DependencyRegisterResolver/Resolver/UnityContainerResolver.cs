@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web.Http.Dependencies;
 using Microsoft.Practices.Unity;
 
-namespace DependencyRegisterResolver
+namespace DependencyRegisterResolver.Resolver
 {
-    public class CustomContainerResolver : IDependencyResolver
+    internal class UnityContainerResolver : IDependencyResolver
     {
         private readonly IUnityContainer _container;
 
-        public CustomContainerResolver(IUnityContainer container)
+        public UnityContainerResolver(IUnityContainer container)
         {
             if (container == null)
             {
@@ -51,7 +51,7 @@ namespace DependencyRegisterResolver
         IDependencyScope IDependencyResolver.BeginScope()
         {
             var child = _container.CreateChildContainer();
-            return new CustomContainerResolver(child);
+            return new UnityContainerResolver(child);
         }
     }
 }

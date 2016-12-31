@@ -1,10 +1,13 @@
 ﻿using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.Filters;
 using Custom.Filters;
 using Custom.Filters.Models;
 using Custom.MessageHandler;
 using DependencyRegisterResolver;
+using DependencyRegisterResolver.Register;
+using DependencyRegisterResolver.Resolver;
 
 namespace WebApplication1
 {
@@ -19,10 +22,14 @@ namespace WebApplication1
         /// <param name="config"></param>
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
-            var container = new UnityContainerRegister().Register();
+            config.EnableCors(new EnableCorsAttribute("*","*","*"));
 
-            config.DependencyResolver = new CustomContainerResolver(container);
+            // Web API configuration and services
+            var container = new ContainerFactory(ContainerFactory.Container.Unity).Instantiate();
+
+            container = container.RegisterContainer();
+
+            config.DependencyResolver = container.ResolveContainer().DependencyResolver;
             
             // Web API routes
             config.MapHttpAttributeRoutes();
@@ -38,6 +45,8 @@ namespace WebApplication1
             config.Services.Add(typeof(IFilterProvider), new CustomFilterProvider());
             
             config.Filters.Add(new CustomExceptionFilter());
+
+            config.Filters.Add(new LoggingFilter());
 
             config.Services.Replace(typeof(IExceptionLogger), new CustomExceptionLogger());
 

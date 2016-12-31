@@ -28,7 +28,8 @@ namespace Dto
         /// <returns></returns>
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this);
+            // return JsonConvert.SerializeObject(this);
+            return this.ToString();
         }
     }
 }

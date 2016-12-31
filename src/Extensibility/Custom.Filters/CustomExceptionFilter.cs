@@ -19,5 +19,5 @@ namespace Custom.Filters
 
             actionExecutedContext.Response = response;
         }
-    }   
+    }
 }

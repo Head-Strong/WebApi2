@@ -1,5 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AutoMapper;
@@ -30,6 +35,7 @@ namespace Controller.Implementation
         [ResponseType(typeof(string))]
         public IHttpActionResult GetData()
         {
+            Thread.Sleep(TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Sleep"])));
             return Ok(_service.GetData());
         }
 
@@ -38,6 +44,7 @@ namespace Controller.Implementation
         /// </summary>
         /// <returns>Get List of Customers</returns>
         [ResponseType(typeof(IEnumerable<CustomerDto>))]
+        [ResponseType(typeof(ErrorDto))]
         public IHttpActionResult GetCustomers()
         {
             // throw new Exception();
@@ -54,17 +61,31 @@ namespace Controller.Implementation
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Saved Customer</returns>
-        [HttpPost]        
+        [HttpPost]
         [ResponseType(typeof(CustomerDto))]
         public IHttpActionResult SaveCustomer(CustomerDto customer)
         {
             // throw new Exception();
+            var validator = new CustomerDtoValidator();
+            var validationResult = validator.Validate(customer);
+
+            if (!validationResult.IsValid)
+            {
+                return new InternalServerErrorActionResult("InternalError", validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+            }
 
             var domainCustomer = _mapper.Map<CustomerDto, Customer>(customer);
 
             domainCustomer = _service.SaveCustomer(domainCustomer);
 
-            return Ok(_mapper.Map<Customer, CustomerDto>(domainCustomer));
+            var customerDto = _mapper.Map<Customer, CustomerDto>(domainCustomer);
+
+            //var response = Request.CreateResponse<CustomerDto>(HttpStatusCode.Created, customerDto);
+
+            //var uri = Url.Link("DefaultApi", new { id = customerDto.Id });
+            //response.Headers.Location = new Uri(uri);
+            
+            return Ok(customerDto);
         }
     }
 }

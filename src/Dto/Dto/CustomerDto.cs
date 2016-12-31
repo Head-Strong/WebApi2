@@ -8,12 +8,12 @@ namespace Dto
     public class CustomerDto
     {
         /// <summary>
-        /// Customer Unique Id
+        /// Customer Unique Id. Required
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// Customer Name
+        /// Customer Name. Required
         /// </summary>
         public string Name { get; set; }
 

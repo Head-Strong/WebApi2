@@ -101,7 +101,7 @@ namespace WebApplication1
                         // more Xml comment files.
                         //
                         c.IncludeXmlComments(GetXmlCommentsPath());
-                        c.IncludeXmlComments(GetDtoXmlCommentsPath());
+                        // c.IncludeXmlComments(GetDtoXmlCommentsPath());
                         // Swashbuckle makes a best attempt at generating Swagger compliant JSON schemas for the various types
                         // exposed in your API. However, there may be occasions when more control of the output is needed.
                         // This is supported through the "MapType" and "SchemaFilter" options:
@@ -249,7 +249,7 @@ namespace WebApplication1
 
         private static string GetXmlCommentsPath()
         {
-            return $@"{AppDomain.CurrentDomain.BaseDirectory}\bin\Controller.Implementation.XML";
+            return $@"{AppDomain.CurrentDomain.BaseDirectory}\swagger\Controller.Implementation.XML";
         }
 
         private static string GetDtoXmlCommentsPath()

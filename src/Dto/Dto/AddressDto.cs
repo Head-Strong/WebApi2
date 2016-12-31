@@ -6,7 +6,7 @@
     public class AddressDto
     {
         /// <summary>
-        /// Address Id
+        /// Address Id 
         /// </summary>
         public int AddressId { get; set; }
 
@@ -16,7 +16,7 @@
         public int CustomerId { get; set; }
 
         /// <summary>
-        /// Pin
+        /// Pin. Required Field
         /// </summary>
         public string Pin { get; set; }        
     }

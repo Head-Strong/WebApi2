@@ -14,5 +14,7 @@ namespace Custom.MessageHandler
                 EventLog.WriteEntry("WebApi", context.Exception.Message);
             }
         }
+
+
     }
 }

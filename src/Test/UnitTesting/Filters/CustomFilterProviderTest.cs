@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
 using Controller.Implementation;
 using Controller.Implementation.AutoMapperConfigMapper;
 using Custom.Filters;

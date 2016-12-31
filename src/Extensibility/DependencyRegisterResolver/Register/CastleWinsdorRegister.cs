@@ -8,21 +8,21 @@ using Repository.Implementation.AutoMapperConfigMapper;
 using Repository.Interface;
 using Service.Interface;
 
-namespace DependencyRegisterResolver
+namespace DependencyRegisterResolver.Register
 {
-    public class CastleWinsdorRegister : IDependencyRegister<IWindsorContainer>
+    internal class CastleWinsdorRegister : IDependencyRegister<IWindsorContainer>
     {
-        private readonly IWindsorContainer _container;
-
-        public CastleWinsdorRegister() : this(null)
+        internal CastleWinsdorRegister() : this(null)
         {
 
         }
 
-        public CastleWinsdorRegister(IWindsorContainer windsorContainer)
+        internal CastleWinsdorRegister(IWindsorContainer windsorContainer)
         {
-            _container = windsorContainer ?? new WindsorContainer();
+            GetContainer = windsorContainer ?? new WindsorContainer();
         }
+
+        public IWindsorContainer GetContainer { get; }
 
         public IWindsorContainer Register()
         {
@@ -30,36 +30,36 @@ namespace DependencyRegisterResolver
             RegisterServices();
             RegisterController();
 
-            return _container;
+            return GetContainer;
         }
 
         private void RegisterRepository()
         {
-            _container.Register(Component.For<TestDatabaseEntities>().LifestylePerWebRequest());
+            GetContainer.Register(Component.For<TestDatabaseEntities>().LifestylePerWebRequest());
 
-            _container.Register(Component.For(typeof(IAutoMapperConfigMapper))
+            GetContainer.Register(Component.For(typeof(IAutoMapperConfigMapper))
                                           .ImplementedBy(typeof(AutoMapperConfigMapper))
                                           .LifestyleSingleton());
 
-            _container.Register(Component.For<ITestRepository>()
+            GetContainer.Register(Component.For<ITestRepository>()
                                           .ImplementedBy(typeof(Repository.Implementation.TestRepository))
                                           .LifestylePerWebRequest());                                   
         }
 
         private void RegisterServices()
         {
-            _container.Register(Component.For<IService>()
+            GetContainer.Register(Component.For<IService>()
                                           .ImplementedBy(typeof(Service.Implementation.Service))
                                           .LifestylePerWebRequest());
         }
 
         private void RegisterController()
         {
-            _container.Register(Component.For<IDtoDomainMapper>()
+            GetContainer.Register(Component.For<IDtoDomainMapper>()
                                           .ImplementedBy(typeof(DtoDomainMapper))
                                           .LifestyleSingleton());
 
-            _container.Register(Component.For<IServiceController>()
+            GetContainer.Register(Component.For<IServiceController>()
                                           .ImplementedBy(typeof(ServiceController))
                                           .LifestylePerWebRequest());
         }

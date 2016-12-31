@@ -90,12 +90,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CastleWinsdorRegister.cs" />
+    <Compile Include="Register\CastleWinsdorRegister.cs" />
     <Compile Include="ContainerFactory.cs" />
-    <Compile Include="UnityContainerRegister.cs" />
+    <Compile Include="Register\UnityContainerRegister.cs" />
     <Compile Include="IDependencyRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CustomContainerResolver.cs" />
+    <Compile Include="Resolver\UnityContainerResolver.cs" />
+    <Compile Include="Resolver\WindsorContainerResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Controller\Controller.Implementation\Controller.Implementation.csproj">

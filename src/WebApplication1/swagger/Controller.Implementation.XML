@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Controller.Implementation</name>
+    </assembly>
+    <members>
+        <member name="T:Controller.Implementation.CustomerDtoValidator">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Controller.Implementation.CustomerDtoValidator.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Controller.Implementation.AddressDtoValidator">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Controller.Implementation.AddressDtoValidator.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Controller.Implementation.ServiceController.GetData">
+            <summary>
+            Provide Response
+            </summary>
+            <returns>Success Response</returns>
+        </member>
+        <member name="M:Controller.Implementation.ServiceController.GetCustomers">
+            <summary>
+            Get Customers
+            </summary>
+            <returns>Get List of Customers</returns>
+        </member>
+        <member name="M:Controller.Implementation.ServiceController.SaveCustomer(Dto.CustomerDto)">
+            <summary>
+            Save Customer
+            </summary>
+            <param name="customer">Customer</param>
+            <returns>Saved Customer</returns>
+        </member>
+    </members>
+</doc>
