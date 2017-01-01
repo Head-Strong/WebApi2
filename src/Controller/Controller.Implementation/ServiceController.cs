@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -35,8 +36,28 @@ namespace Controller.Implementation
         [ResponseType(typeof(string))]
         public IHttpActionResult GetData()
         {
-            Thread.Sleep(TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Sleep"])));
-            return Ok(_service.GetData());
+            var request = Request.Headers;
+
+            var guidValues = request.GetValues("Guid");
+
+            string guid = string.Empty;
+            if (guidValues != null)
+            {
+                guid = guidValues.FirstOrDefault();
+            }
+            
+            //Thread.Sleep(TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Sleep"])));
+
+            //using (var httpClient = new HttpClient())
+            //{
+            //    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //    var response = httpClient.GetAsync("http://www.google.com").GetAwaiter().GetResult();
+            //    var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            //    Console.WriteLine(data);
+            //    Console.WriteLine("===============");
+            //}
+
+            return Ok(guid);
         }
 
         /// <summary>
@@ -84,7 +105,7 @@ namespace Controller.Implementation
 
             //var uri = Url.Link("DefaultApi", new { id = customerDto.Id });
             //response.Headers.Location = new Uri(uri);
-            
+
             return Ok(customerDto);
         }
     }

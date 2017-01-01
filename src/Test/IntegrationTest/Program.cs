@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using IntegrationTest.Response;
 using Newtonsoft.Json;
 using ORM.Data;
@@ -18,43 +20,93 @@ namespace IntegrationTest
         private const string ServerGetUrl = "http://localhost:80/api/service/getdata";
         private const string LocalGetUrl = "http://localhost:2967/api/service/getdata";
 
+        private static readonly HttpClient _httpClient = new HttpClient();
+
         private static void TestPing()
         {
-            for (var i = 1; i <= 500; i++)
-            {
-                //Console.Clear();
-                Console.WriteLine("Ping " + i);
+            _httpClient.DefaultRequestHeaders.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                Console.ForegroundColor = i % 2 == 0 ? ConsoleColor.Red : ConsoleColor.Yellow;
-
-                var allCustomers = GetAllCustomers();
-                if (allCustomers.Status == HttpStatusCode.OK)
+            Parallel.For(0, 100,
+                i =>
                 {
-                    Console.WriteLine("Success for Ping" + i);
-                    foreach (var allCustomersCustomerDto in allCustomers.CustomerDtos)
+                    //using (var httpClient = new HttpClient())
+                    //{
+                    var guidData = Guid.NewGuid().ToString();
+                    //_httpClient.DefaultRequestHeaders.Add("Guid", guidData);
+                    var response = _httpClient.CustomGetAsync("http://localhost:2967/api/service/GetData", x => x.Headers.Add("Guid", guidData)).GetAwaiter().GetResult();
+                    var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    Console.WriteLine("Count :" + i + " Other Data :" + data);
+                    Console.WriteLine("===============");
+
+                    var result = SaveCustomerAbstracted(guidData, guidData, new List<string> { guidData });
+                    if (result.Status == HttpStatusCode.OK)
                     {
-                        Console.WriteLine(allCustomersCustomerDto.ToString());
+                        Console.WriteLine("Saved Cusomer Id" + result.CustomerDto.Id);
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Error For Ping:" + i);
-                    Console.WriteLine(allCustomers.ErrorDto.ToString());
-                }
+                    else
+                    {
+                        Console.WriteLine("Error" + result.ErrorDto.ErrorCategory);
+                    }
+
+                });
 
 
 
-                //using (var httpClient = new HttpClient())
-                //{
-                //    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                //    var response = httpClient.GetAsync(ServerGetUrl).GetAwaiter().GetResult();
-                //    var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                //    Console.WriteLine(data);
-                //    Console.WriteLine("===============");
-                //}
+            //for (var i = 1; i <= 10000; i++)
+            //{
+            //    //Console.Clear();
+            //    Console.WriteLine("Ping " + i);
+            //    Console.ForegroundColor = i % 2 == 0 ? ConsoleColor.Red : ConsoleColor.Yellow;
 
-                Console.WriteLine("Ping Finished " + i);
-            }
+            //    //var allCustomers = GetAllCustomers();
+            //    //if (allCustomers.Status == HttpStatusCode.OK)
+            //    //{
+            //    //    Console.WriteLine("Success for Ping" + i);
+            //    //    foreach (var allCustomersCustomerDto in allCustomers.CustomerDtos)
+            //    //    {
+            //    //        Console.WriteLine(allCustomersCustomerDto.ToString());
+            //    //    }
+            //    //}
+            //    //else
+            //    //{
+            //    //    Console.WriteLine("Error For Ping:" + i);
+            //    //    Console.WriteLine(allCustomers.ErrorDto.ToString());
+            //    //}
+
+            //    //using (var httpClient = new HttpClient())
+            //    //{
+            //    _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //    var response = _httpClient.CustomGetAsync("https://graph.facebook.com/jammuestates/").GetAwaiter().GetResult();
+            //    var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            //    Console.WriteLine(data);
+            //    Console.WriteLine("===============");
+            //    //}
+
+            //    Console.WriteLine("Ping Finished " + i);
+            //}
+        }
+
+        private static Task<HttpResponseMessage> CustomGetAsync(this HttpClient httpClient, string url, Action<HttpRequestMessage> manipulateData)
+        {
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+
+            manipulateData(httpRequestMessage);
+
+            return httpClient.SendAsync(httpRequestMessage);
+        }
+
+        private static Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient httpClient, string url, T value, Action<HttpRequestMessage> manipulateData)
+        {
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(value), Encoding.UTF8, "application/json")
+                //Content = new ObjectContent<T>(value, new JsonMediaTypeFormatter(), (MediaTypeHeaderValue)null)
+            };
+
+            manipulateData(httpRequestMessage);
+
+            return httpClient.SendAsync(httpRequestMessage);
         }
 
         public static void Main(string[] args)
@@ -190,35 +242,46 @@ namespace IntegrationTest
                 pins.Add(Console.ReadLine());
             }
 
-            var sp = ServicePointManager.FindServicePoint(new Uri(""));
-            sp.ConnectionLeaseTimeout = 2000;
+            //var sp = ServicePointManager.FindServicePoint(new Uri(""));
+            //sp.ConnectionLeaseTimeout = 2000;
 
+
+            SaveCustomerAbstracted(name, lastName, pins);
+        }
+
+        private static CustomerSaveResponse SaveCustomerAbstracted(string name, string lastName, IEnumerable<string> pins)
+        {
             var customersResponse = new CustomerSaveResponse();
+            var guidData = new Guid().ToString();
             var customer = PrepareCustomer(name, lastName, pins);
             var customerData = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, "application/json");
-            using (var httpClient = new HttpClient())
-            {
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var response = httpClient.PostAsync(SaveUrl, customerData).GetAwaiter().GetResult();
-                var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            //using (var httpClient = new HttpClient())
+            //{
+            //_httpClient.DefaultRequestHeaders.Clear();
+            //_httpClient.Timeout = TimeSpan.FromSeconds(30);
+            //_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var response = _httpClient.PostAsJsonAsync(SaveUrl, customer, x => x.Headers.Add("Guid", guidData)).GetAwaiter().GetResult();
+            var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseData = JsonConvert.DeserializeObject<CustomerDto>(data, IgnoreNullSettings());
-                    customersResponse.CustomerDto = responseData;
-                    customersResponse.Status = response.StatusCode;
-                    Console.WriteLine("User Saved Successfully");
-                    Console.WriteLine(customersResponse.CustomerDto.ToString());
-                }
-                else
-                {
-                    var errorDto = JsonConvert.DeserializeObject<ErrorDto>(data, IgnoreNullSettings());
-                    customersResponse.ErrorDto = errorDto;
-                    customersResponse.Status = response.StatusCode;
-                    Console.WriteLine("Error Occurred While Saving User");
-                    Console.WriteLine(customersResponse.ErrorDto.ToString());
-                }
+            if (response.IsSuccessStatusCode)
+            {
+                var responseData = JsonConvert.DeserializeObject<CustomerDto>(data, IgnoreNullSettings());
+                customersResponse.CustomerDto = responseData;
+                customersResponse.Status = response.StatusCode;
+                Console.WriteLine("User Saved Successfully");
+                Console.WriteLine(customersResponse.CustomerDto.ToString());
             }
+            else
+            {
+                var errorDto = JsonConvert.DeserializeObject<ErrorDto>(data, IgnoreNullSettings());
+                customersResponse.ErrorDto = errorDto;
+                customersResponse.Status = response.StatusCode;
+                Console.WriteLine("Error Occurred While Saving User");
+                Console.WriteLine(customersResponse.ErrorDto.ToString());
+            }
+            //}
+
+            return customersResponse;
         }
 
         private static JsonSerializerSettings IgnoreNullSettings()

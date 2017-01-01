@@ -3,6 +3,7 @@ using Controller.Implementation.AutoMapperConfigMapper;
 using Controller.Interface;
 using Microsoft.Practices.Unity;
 using ORM.Data;
+using Repository.Implementation;
 using Repository.Implementation.AutoMapperConfigMapper;
 using Repository.Interface;
 using Service.Interface;
@@ -36,13 +37,21 @@ namespace DependencyRegisterResolver.Register
         #region Helper Methods
         private static void RegisterRepository()
         {
-            _container.RegisterInstance(typeof(TestDatabaseEntities));
+            _container.RegisterInstance(typeof(TestDatabaseEntities), new PerThreadLifetimeManager());
 
-            _container.RegisterType<IAutoMapperConfigMapper, AutoMapperConfigMapper>(
-                new ContainerControlledLifetimeManager());
+            _container.RegisterType<IAutoMapperConfigMapper, AutoMapperConfigMapper>(new ContainerControlledLifetimeManager());
 
-            _container.RegisterType<ITestRepository, Repository.Implementation.TestRepository>(
-                new HierarchicalLifetimeManager());
+            _container.RegisterType<ITestRepository, TestRepository>(new HierarchicalLifetimeManager());
+
+            _container.RegisterType<IRepository<ORM.Data.Customer>, Repository<ORM.Data.Customer>>(new HierarchicalLifetimeManager());
+
+            _container.RegisterType<IRepository<ORM.Data.Address>, Repository<ORM.Data.Address>>(new HierarchicalLifetimeManager());
+
+            _container.RegisterType<ICustomerRepository, CustomerRepository>(new HierarchicalLifetimeManager());
+
+            _container.RegisterType<IAddressRepository, AddressRepository>(new HierarchicalLifetimeManager());
+            
+            _container.RegisterType<IUnitofWork, UnitofWork>(new HierarchicalLifetimeManager());
         }
 
         private static void RegisterServices()

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using AutoMapper;
 using ORM.Data;
 using Repository.Implementation.AutoMapperConfigMapper;
@@ -42,8 +41,6 @@ namespace Repository.Implementation
             var customerDb = _mapper.Map<Customer, ORM.Data.Customer>(customer);
 
             _testDatabaseEntities.Customers.Add(customerDb);
-
-            Thread.Sleep(TimeSpan.FromSeconds(10));
 
             _testDatabaseEntities.SaveChanges();
 

@@ -9,12 +9,10 @@ namespace Repository.Implementation
     public class Repository<TEnity> : IRepository<TEnity> where TEnity : class
     {
         private readonly DbContext _dbContext;
-        private readonly IAutoMapperConfigMapper _autoMapperConfigMapper;
 
-        protected Repository(DbContext dbContext, IAutoMapperConfigMapper autoMapperConfigMapper)
+        protected Repository(DbContext dbContext)
         {
             _dbContext = dbContext;
-            _autoMapperConfigMapper = autoMapperConfigMapper;
         }
 
         public IEnumerable<TEnity> GetEntities()

@@ -7,26 +7,29 @@ namespace Service.Implementation
 {
     public class Service : IService
     {
-        private readonly ITestRepository _testRepository;
+        private readonly IUnitofWork _unitofWork;
 
-        public Service(ITestRepository testRepository)
+        public Service(IUnitofWork unitofWork)
         {
-            _testRepository = testRepository;
+            _unitofWork = unitofWork;
         }
 
         public string GetData()
         {
-            return _testRepository.GetData();
+            return _unitofWork.CustomerRepository.GetData();
         }
 
         public IEnumerable<Customer> GetCustomers()
         {
-            return _testRepository.GetCustomers();
+            return _unitofWork.CustomerRepository.GetCustomers();
         }
 
         public Customer SaveCustomer(Customer customer)
         {
-            return _testRepository.SaveCustomer(customer);
+            _unitofWork.CustomerRepository.SaveCustomer(customer);
+            customer.Id = _unitofWork.Save();
+
+            return customer;
         }
     }
 }

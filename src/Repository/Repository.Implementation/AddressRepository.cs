@@ -14,7 +14,7 @@ namespace Repository.Implementation
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="autoMapperConfigMapper"></param>
-        public AddressRepository(TestDatabaseEntities dbContext, IAutoMapperConfigMapper autoMapperConfigMapper) : base(dbContext, autoMapperConfigMapper)
+        public AddressRepository(TestDatabaseEntities dbContext, IAutoMapperConfigMapper autoMapperConfigMapper) : base(dbContext)
         {
             _dbContext = dbContext;
             _autoMapperConfigMapper = autoMapperConfigMapper;
