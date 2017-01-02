@@ -51,6 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\HttpClientExtended.cs" />
+    <Compile Include="Client\IServiceClient.cs" />
+    <Compile Include="Client\ServiceClient.cs" />
+    <Compile Include="Common.cs" />
     <Compile Include="Response\AddressDto.cs" />
     <Compile Include="Response\BaseResponse.cs" />
     <Compile Include="Response\CustomerSaveResponse.cs" />

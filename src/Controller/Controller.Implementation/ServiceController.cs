@@ -39,14 +39,16 @@ namespace Controller.Implementation
             var request = Request.Headers;
 
             var guidValues = request.GetValues("Guid");
+            var guid = string.Empty;
 
-            string guid = string.Empty;
+            var authKey = request.Authorization;
+
             if (guidValues != null)
             {
                 guid = guidValues.FirstOrDefault();
             }
-            
-            //Thread.Sleep(TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Sleep"])));
+
+            Thread.Sleep(TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Sleep"])));
 
             //using (var httpClient = new HttpClient())
             //{
@@ -57,7 +59,7 @@ namespace Controller.Implementation
             //    Console.WriteLine("===============");
             //}
 
-            return Ok(guid);
+            return Ok(guid + "~" + authKey.Parameter);
         }
 
         /// <summary>

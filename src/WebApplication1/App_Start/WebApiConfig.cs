@@ -42,6 +42,8 @@ namespace WebApplication1
 
             var data12 = FilterConfigurationReader.Get();
 
+            config.MessageHandlers.Add(new AuthenticationHandler());
+
             config.Services.Add(typeof(IFilterProvider), new CustomFilterProvider());
             
             config.Filters.Add(new CustomExceptionFilter());

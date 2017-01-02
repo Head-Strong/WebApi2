@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
+using IntegrationTest.Client;
 using IntegrationTest.Response;
 using Newtonsoft.Json;
-using ORM.Data;
 
 namespace IntegrationTest
 {
@@ -19,35 +17,40 @@ namespace IntegrationTest
         private const string GetUrl = "http://localhost:2967/api/service/GetCustomers";
         private const string ServerGetUrl = "http://localhost:80/api/service/getdata";
         private const string LocalGetUrl = "http://localhost:2967/api/service/getdata";
-
-        private static readonly HttpClient _httpClient = new HttpClient();
+        private static readonly IServiceClient ServiceClient = new ServiceClient(CommonFuncionality.GetHttpClient());
 
         private static void TestPing()
         {
-            _httpClient.DefaultRequestHeaders.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            
 
-            Parallel.For(0, 100,
+            Parallel.For(0, 5,
                 i =>
                 {
+                    var guidData = Guid.NewGuid().ToString();
+                    var authorization = Guid.NewGuid().ToString();
+                    var result1 = ServiceClient.GetData1("GUID", "Auth").Result;
+                    Console.WriteLine(result1);
+                    var result = ServiceClient.GetData(guidData, authorization).Result;
+                    Console.WriteLine(result);
+
                     //using (var httpClient = new HttpClient())
                     //{
-                    var guidData = Guid.NewGuid().ToString();
-                    //_httpClient.DefaultRequestHeaders.Add("Guid", guidData);
-                    var response = _httpClient.CustomGetAsync("http://localhost:2967/api/service/GetData", x => x.Headers.Add("Guid", guidData)).GetAwaiter().GetResult();
-                    var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                    Console.WriteLine("Count :" + i + " Other Data :" + data);
-                    Console.WriteLine("===============");
+                    //var guidData = Guid.NewGuid().ToString();
+                    ////_httpClient.DefaultRequestHeaders.Add("Guid", guidData);
+                    //var response = _httpClient.CustomGetAsync("http://localhost:2967/api/service/GetData", x => x.Headers.Add("Guid", guidData)).GetAwaiter().GetResult();
+                    //var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    //Console.WriteLine("Count :" + i + " Other Data :" + data);
+                    //Console.WriteLine("===============");
 
-                    var result = SaveCustomerAbstracted(guidData, guidData, new List<string> { guidData });
-                    if (result.Status == HttpStatusCode.OK)
-                    {
-                        Console.WriteLine("Saved Cusomer Id" + result.CustomerDto.Id);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Error" + result.ErrorDto.ErrorCategory);
-                    }
+                    //var result = SaveCustomerAbstracted(guidData, guidData, new List<string> { guidData });
+                    //if (result.Status == HttpStatusCode.OK)
+                    //{
+                    //    Console.WriteLine("Saved Cusomer Id" + result.CustomerDto.Id);
+                    //}
+                    //else
+                    //{
+                    //    Console.WriteLine("Error" + result.ErrorDto.ErrorCategory);
+                    //}
 
                 });
 
@@ -85,28 +88,6 @@ namespace IntegrationTest
 
             //    Console.WriteLine("Ping Finished " + i);
             //}
-        }
-
-        private static Task<HttpResponseMessage> CustomGetAsync(this HttpClient httpClient, string url, Action<HttpRequestMessage> manipulateData)
-        {
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
-
-            manipulateData(httpRequestMessage);
-
-            return httpClient.SendAsync(httpRequestMessage);
-        }
-
-        private static Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient httpClient, string url, T value, Action<HttpRequestMessage> manipulateData)
-        {
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(value), Encoding.UTF8, "application/json")
-                //Content = new ObjectContent<T>(value, new JsonMediaTypeFormatter(), (MediaTypeHeaderValue)null)
-            };
-
-            manipulateData(httpRequestMessage);
-
-            return httpClient.SendAsync(httpRequestMessage);
         }
 
         public static void Main(string[] args)
@@ -206,13 +187,13 @@ namespace IntegrationTest
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseData = JsonConvert.DeserializeObject<List<CustomerDto>>(data, IgnoreNullSettings());
+                    var responseData = JsonConvert.DeserializeObject<List<CustomerDto>>(data, CommonFuncionality.IgnoreNullSettings());
                     customersResponse.CustomerDtos = responseData;
                     customersResponse.Status = response.StatusCode;
                 }
                 else
                 {
-                    var errorDto = JsonConvert.DeserializeObject<ErrorDto>(data, IgnoreNullSettings());
+                    var errorDto = JsonConvert.DeserializeObject<ErrorDto>(data, CommonFuncionality.IgnoreNullSettings());
                     customersResponse.ErrorDto = errorDto;
                     customersResponse.Status = response.StatusCode;
                 }
@@ -246,73 +227,7 @@ namespace IntegrationTest
             //sp.ConnectionLeaseTimeout = 2000;
 
 
-            SaveCustomerAbstracted(name, lastName, pins);
-        }
-
-        private static CustomerSaveResponse SaveCustomerAbstracted(string name, string lastName, IEnumerable<string> pins)
-        {
-            var customersResponse = new CustomerSaveResponse();
-            var guidData = new Guid().ToString();
-            var customer = PrepareCustomer(name, lastName, pins);
-            var customerData = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, "application/json");
-            //using (var httpClient = new HttpClient())
-            //{
-            //_httpClient.DefaultRequestHeaders.Clear();
-            //_httpClient.Timeout = TimeSpan.FromSeconds(30);
-            //_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var response = _httpClient.PostAsJsonAsync(SaveUrl, customer, x => x.Headers.Add("Guid", guidData)).GetAwaiter().GetResult();
-            var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
-            if (response.IsSuccessStatusCode)
-            {
-                var responseData = JsonConvert.DeserializeObject<CustomerDto>(data, IgnoreNullSettings());
-                customersResponse.CustomerDto = responseData;
-                customersResponse.Status = response.StatusCode;
-                Console.WriteLine("User Saved Successfully");
-                Console.WriteLine(customersResponse.CustomerDto.ToString());
-            }
-            else
-            {
-                var errorDto = JsonConvert.DeserializeObject<ErrorDto>(data, IgnoreNullSettings());
-                customersResponse.ErrorDto = errorDto;
-                customersResponse.Status = response.StatusCode;
-                Console.WriteLine("Error Occurred While Saving User");
-                Console.WriteLine(customersResponse.ErrorDto.ToString());
-            }
-            //}
-
-            return customersResponse;
-        }
-
-        private static JsonSerializerSettings IgnoreNullSettings()
-        {
-            return new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore
-            };
-        }
-
-        private static Customer PrepareCustomer(string name, string lastName, IEnumerable<string> pins)
-        {
-            var customer = new Customer
-            {
-                Id = 0,
-                Name = name,
-                LastName = lastName,
-                Addresses = new List<Address>()
-            };
-
-            foreach (var pin in pins)
-            {
-                customer.Addresses.Add(new Address
-                {
-                    AddressId = 0,
-                    CustomerId = 0,
-                    Pin = pin
-                });
-            }
-
-            return customer;
-        }
+            ServiceClient.SaveCustomerAbstracted(name, lastName, pins);
+        }              
     }
 }
