@@ -7,6 +7,8 @@ namespace Repository.Interface
     {
         string GetData();
 
+        List<string> GetProfiles();
+
         IEnumerable<Domains.Customer> GetCustomers();
 
         Domains.Customer SaveCustomer(Domains.Customer customer);

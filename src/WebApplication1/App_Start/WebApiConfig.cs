@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System.Data.Entity;
+using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.Filters;
@@ -8,6 +9,8 @@ using Custom.MessageHandler;
 using DependencyRegisterResolver;
 using DependencyRegisterResolver.Register;
 using DependencyRegisterResolver.Resolver;
+using ORM.Data;
+using Service.Interface;
 
 namespace WebApplication1
 {
@@ -42,7 +45,9 @@ namespace WebApplication1
 
             var data12 = FilterConfigurationReader.Get();
 
-            config.MessageHandlers.Add(new AuthenticationHandler());
+            var resolvedService = config.DependencyResolver.GetService(typeof(IService)) as IService;
+
+            config.MessageHandlers.Add(new AuthenticationHandler(resolvedService));
 
             config.Services.Add(typeof(IFilterProvider), new CustomFilterProvider());
             

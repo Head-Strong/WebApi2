@@ -10,5 +10,7 @@ namespace Service.Interface
         IEnumerable<Customer> GetCustomers();
 
         Customer SaveCustomer(Customer customer);
+
+        List<string> GetProfiles();
     }
 }

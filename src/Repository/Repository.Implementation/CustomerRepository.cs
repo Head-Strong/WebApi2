@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using AutoMapper;
 using ORM.Data;
@@ -40,5 +43,39 @@ namespace Repository.Implementation
 
             return _autoMapperConfigMapper.Map<Customer, Domains.Customer>(customerDb);
         }
+
+        public List<string> GetProfiles()
+        {
+            List<string> profiles;
+            var conString = ConfigurationManager.AppSettings["TestDatabaseEntities"];   //ConfigurationManager.AppSettings["MasterDB"];
+            using (var con = new SqlConnection(conString))
+            {
+                var cmd = new SqlCommand
+                {
+                    CommandText = QueryData,
+                    Connection = con,
+                    CommandType = CommandType.Text                    
+                };
+                con.Open();
+                var dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                if (!dataReader.HasRows) return null;
+
+                profiles = new List<string>();
+                while (dataReader.Read())
+                {
+                    profiles.Add(dataReader.GetValue(0).ToString());
+                }
+            }
+
+            return profiles;
+            //return _context.Database.SqlQuery<string>(QueryData).ToList();
+        }
+
+        private const string QueryData = @"SELECT DISTINCT R.roleName FROM Profiles P
+                                        INNER JOIN Profile_Role_Link PRL
+                                        ON P.idProfile = PRL.idProfile
+                                        INNER JOIN Roles R
+                                        ON R.idRole = PRL.idRole";
     }
 }

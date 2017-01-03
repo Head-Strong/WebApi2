@@ -28,8 +28,8 @@ namespace IntegrationTest
                 {
                     var guidData = Guid.NewGuid().ToString();
                     var authorization = Guid.NewGuid().ToString();
-                    var result1 = ServiceClient.GetData1("GUID", "Auth").Result;
-                    Console.WriteLine(result1);
+                    //var result1 = ServiceClient.GetData1("GUID", "Auth").Result;
+                    //Console.WriteLine(result1);
                     var result = ServiceClient.GetData(guidData, authorization).Result;
                     Console.WriteLine(result);
 

@@ -163,6 +163,14 @@
       <Project>{c097a429-5076-4563-aa40-03f8900a3dde}</Project>
       <Name>DependencyRegisterResolver</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Repository\ORM.Data\ORM.Data.csproj">
+      <Project>{9CA9FCC3-F413-4C69-AD91-2613CC9AA6CF}</Project>
+      <Name>ORM.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Service\Service.Interface\Service.Interface.csproj">
+      <Project>{2336297E-4FE9-4FE1-986B-0BEF1D267002}</Project>
+      <Name>Service.Interface</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

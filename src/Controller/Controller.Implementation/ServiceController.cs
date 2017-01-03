@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Threading;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -36,8 +37,19 @@ namespace Controller.Implementation
         [ResponseType(typeof(string))]
         public IHttpActionResult GetData()
         {
-            var request = Request.Headers;
+            var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
+            var commaSepratedProfiles = string.Empty;
+            if (claimsPrincipal != null)
+            {
+                var claims = claimsPrincipal
+                    .Claims.ToList().FindAll(x => x.Type.Contains("role"));
 
+                var claimsAssociatedWithUser = claims.Select(claim => claim.Value).ToArray();
+
+                commaSepratedProfiles = string.Join(",", claimsAssociatedWithUser);
+            }
+
+            var request = Request.Headers;
             var guidValues = request.GetValues("Guid");
             var guid = string.Empty;
 
@@ -48,18 +60,9 @@ namespace Controller.Implementation
                 guid = guidValues.FirstOrDefault();
             }
 
-            Thread.Sleep(TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Sleep"])));
+            //Thread.Sleep(TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Sleep"])));
 
-            //using (var httpClient = new HttpClient())
-            //{
-            //    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //    var response = httpClient.GetAsync("http://www.google.com").GetAwaiter().GetResult();
-            //    var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            //    Console.WriteLine(data);
-            //    Console.WriteLine("===============");
-            //}
-
-            return Ok(guid + "~" + authKey.Parameter);
+            return Ok(guid + "~" + authKey.Parameter + "~" + commaSepratedProfiles);
         }
 
         /// <summary>

@@ -46,7 +46,7 @@ namespace DependencyRegisterResolver
             switch (_container)
             {
                 case Container.Unity:
-                    _unityContainer.Register();
+                    CustomRegisterdContainer = _unityContainer.Register();
                     break;
 
                 case Container.CastleWindsor:
@@ -62,6 +62,8 @@ namespace DependencyRegisterResolver
 
             return this;
         }
+
+        public static IUnityContainer CustomRegisterdContainer { get; set; }
 
         public ContainerFactory ResolveContainer()
         {

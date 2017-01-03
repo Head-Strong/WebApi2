@@ -31,5 +31,10 @@ namespace Service.Implementation
 
             return customer;
         }
+
+        public List<string> GetProfiles()
+        {
+            return _unitofWork.CustomerRepository.GetProfiles();
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace Repository.Implementation
     public class UnitofWork : IUnitofWork
     {
         private readonly TestDatabaseEntities _databaseEntities;
-        private bool _disposed = false;
+        private bool _disposed;
 
         public UnitofWork(TestDatabaseEntities databaseEntities, IAutoMapperConfigMapper autoMapperConfigMapper)
         {
