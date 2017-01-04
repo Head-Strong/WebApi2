@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest", "Test\Int
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTesting", "Test\UnitTesting\UnitTesting.csproj", "{E17A3010-6EE8-4DCF-8931-2264C0F705F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dto.Validator", "Dto\Dto.Validator\Dto.Validator.csproj", "{A8D48B62-A8F0-4181-B49F-2063F49BC8A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,10 @@ Global
 		{E17A3010-6EE8-4DCF-8931-2264C0F705F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E17A3010-6EE8-4DCF-8931-2264C0F705F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E17A3010-6EE8-4DCF-8931-2264C0F705F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8D48B62-A8F0-4181-B49F-2063F49BC8A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8D48B62-A8F0-4181-B49F-2063F49BC8A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8D48B62-A8F0-4181-B49F-2063F49BC8A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8D48B62-A8F0-4181-B49F-2063F49BC8A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,5 +138,6 @@ Global
 		{1102D64D-D237-428B-8384-D2E0112D4752} = {DE2CF4BC-2FAE-4A1C-A24A-20EAFF32BFB7}
 		{C9ED4292-DA17-472F-9E41-204F5CDFD96D} = {0ADFB6C9-BFF2-40C2-9DBB-1EBA38FC481B}
 		{E17A3010-6EE8-4DCF-8931-2264C0F705F2} = {0ADFB6C9-BFF2-40C2-9DBB-1EBA38FC481B}
+		{A8D48B62-A8F0-4181-B49F-2063F49BC8A7} = {2A8F21D9-69C3-4397-B38C-5CBF0A835741}
 	EndGlobalSection
 EndGlobal

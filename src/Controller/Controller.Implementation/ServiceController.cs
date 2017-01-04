@@ -36,33 +36,36 @@ namespace Controller.Implementation
         /// <returns>Success Response</returns>
         [ResponseType(typeof(string))]
         public IHttpActionResult GetData()
+
         {
-            var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
-            var commaSepratedProfiles = string.Empty;
-            if (claimsPrincipal != null)
-            {
-                var claims = claimsPrincipal
-                    .Claims.ToList().FindAll(x => x.Type.Contains("role"));
+            //var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
+            //var commaSepratedProfiles = string.Empty;
+            //if (claimsPrincipal != null)
+            //{
+            //    var claims = claimsPrincipal
+            //        .Claims.ToList().FindAll(x => x.Type.Contains("role"));
 
-                var claimsAssociatedWithUser = claims.Select(claim => claim.Value).ToArray();
+            //    var claimsAssociatedWithUser = claims.Select(claim => claim.Value).ToArray();
 
-                commaSepratedProfiles = string.Join(",", claimsAssociatedWithUser);
-            }
+            //    commaSepratedProfiles = string.Join(",", claimsAssociatedWithUser);
+            //}
 
-            var request = Request.Headers;
-            var guidValues = request.GetValues("Guid");
-            var guid = string.Empty;
+            //var request = Request.Headers;
+            //var guidValues = request.GetValues("Guid");
+            //var guid = string.Empty;
 
-            var authKey = request.Authorization;
+            //var authKey = request.Authorization;
 
-            if (guidValues != null)
-            {
-                guid = guidValues.FirstOrDefault();
-            }
+            //if (guidValues != null)
+            //{
+            //    guid = guidValues.FirstOrDefault();
+            //}
 
-            //Thread.Sleep(TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Sleep"])));
+            ////Thread.Sleep(TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Sleep"])));
 
-            return Ok(guid + "~" + authKey.Parameter + "~" + commaSepratedProfiles);
+            //return Ok(guid + "~" + authKey.Parameter + "~" + commaSepratedProfiles);
+
+            return Ok("Ok");
         }
 
         /// <summary>
@@ -91,25 +94,11 @@ namespace Controller.Implementation
         [ResponseType(typeof(CustomerDto))]
         public IHttpActionResult SaveCustomer(CustomerDto customer)
         {
-            // throw new Exception();
-            var validator = new CustomerDtoValidator();
-            var validationResult = validator.Validate(customer);
-
-            if (!validationResult.IsValid)
-            {
-                return new InternalServerErrorActionResult("InternalError", validationResult.Errors.Select(x => x.ErrorMessage).ToList());
-            }
-
             var domainCustomer = _mapper.Map<CustomerDto, Customer>(customer);
 
             domainCustomer = _service.SaveCustomer(domainCustomer);
 
             var customerDto = _mapper.Map<Customer, CustomerDto>(domainCustomer);
-
-            //var response = Request.CreateResponse<CustomerDto>(HttpStatusCode.Created, customerDto);
-
-            //var uri = Url.Link("DefaultApi", new { id = customerDto.Id });
-            //response.Headers.Location = new Uri(uri);
 
             return Ok(customerDto);
         }

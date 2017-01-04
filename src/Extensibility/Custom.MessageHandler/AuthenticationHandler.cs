@@ -21,48 +21,21 @@ namespace Custom.MessageHandler
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var authorization = request.Headers.Authorization;
+            //var authorization = request.Headers.Authorization;
 
-            if (string.IsNullOrWhiteSpace(authorization.Scheme))
-            {
-                var responseMessage = PrepareResponseMessage("Schema is not present.");
-                return responseMessage;
-            }
+            //if (string.IsNullOrWhiteSpace(authorization.Scheme))
+            //{
+            //    var responseMessage = PrepareResponseMessage("Schema is not present.");
+            //    return responseMessage;
+            //}
 
-            if (string.IsNullOrWhiteSpace(authorization.Parameter))
-            {
-                var responseMessage = PrepareResponseMessage("Authorization key is missing.");
-                return responseMessage;
-            }
+            //if (string.IsNullOrWhiteSpace(authorization.Parameter))
+            //{
+            //    var responseMessage = PrepareResponseMessage("Authorization key is missing.");
+            //    return responseMessage;
+            //}
 
-            try
-            {
-                var roles = _service.GetProfiles();
-
-                var claimsIdentity = new ClaimsIdentity("Testuser");
-
-                foreach (var role in roles)
-                {
-                    claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, role));
-                }
-
-                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);               
-
-                Thread.CurrentPrincipal = claimsPrincipal;
-
-                if (HttpContext.Current.User == null)
-                {
-                    HttpContext.Current.User = claimsPrincipal;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-
-
-            return await base.SendAsync(request, cancellationToken);
+           return await base.SendAsync(request, cancellationToken);
         }
 
         private static HttpResponseMessage PrepareResponseMessage(string message)

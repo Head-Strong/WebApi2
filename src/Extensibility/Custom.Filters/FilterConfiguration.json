@@ -1,9 +1,9 @@
 ﻿[
   {
-    "ActionName": "post",
+    "ActionName": "SaveCustomer",
     "ControllerName": "customer",
-    "Filter": "CustomAuthorizeAttribute",
-    "Roles": [ "read", "write" ]
+    "Filter": "Service",
+    "Roles": ""
   },
   {
     "ActionName": "getdata",

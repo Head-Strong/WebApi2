@@ -1,12 +1,18 @@
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Threading;
 
 namespace Controller.Implementation.CustomActionResult
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class InternalServerErrorActionResult : BaseHttpActionResult
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="errorCategory"></param>
+        /// <param name="errorDescriptions"></param>
         public InternalServerErrorActionResult(string errorCategory, List<string> errorDescriptions)
             : base(errorCategory, errorDescriptions)
         {
@@ -15,8 +21,16 @@ namespace Controller.Implementation.CustomActionResult
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class UnauthorizedActionResult : BaseHttpActionResult
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="errorCategory"></param>
+        /// <param name="errorDescriptions"></param>
         public UnauthorizedActionResult(string errorCategory, List<string> errorDescriptions)
             : base(errorCategory, errorDescriptions)
         {
@@ -24,12 +38,37 @@ namespace Controller.Implementation.CustomActionResult
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ForbiddenActionResult : BaseHttpActionResult
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="errorCategory"></param>
+        /// <param name="errorDescriptions"></param>
         public ForbiddenActionResult(string errorCategory, List<string> errorDescriptions)
             : base(errorCategory, errorDescriptions)
         {
             StatusCode = HttpStatusCode.Forbidden;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class BadActionResult : BaseHttpActionResult
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="errorCategory"></param>
+        /// <param name="errorDescriptions"></param>
+        public BadActionResult(string errorCategory, List<string> errorDescriptions)
+            : base(errorCategory, errorDescriptions)
+        {
+            StatusCode = HttpStatusCode.BadRequest;
         }
     }
 }

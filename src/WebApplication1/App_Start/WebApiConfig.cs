@@ -3,14 +3,18 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.Filters;
+using System.Web.Http.Validation;
+using System.Web.ModelBinding;
 using Custom.Filters;
 using Custom.Filters.Models;
 using Custom.MessageHandler;
 using DependencyRegisterResolver;
 using DependencyRegisterResolver.Register;
 using DependencyRegisterResolver.Resolver;
+using FluentValidation.WebApi;
 using ORM.Data;
 using Service.Interface;
+using ModelValidatorProvider = System.Web.ModelBinding.ModelValidatorProvider;
 
 namespace WebApplication1
 {
@@ -58,6 +62,10 @@ namespace WebApplication1
             config.Services.Replace(typeof(IExceptionLogger), new CustomExceptionLogger());
 
             config.Services.Replace(typeof(IExceptionHandler), new CustomExceptionHandler());
+
+            FluentValidationModelValidatorProvider.Configure(config);
+
+            config.Services.Add(typeof(System.Web.Http.Validation.ModelValidatorProvider), new CustomModelValidatorProvider());
 
             SwaggerConfig.Register();
         }
