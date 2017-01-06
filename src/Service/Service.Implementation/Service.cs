@@ -27,7 +27,7 @@ namespace Service.Implementation
         public Customer SaveCustomer(Customer customer)
         {
             _unitofWork.CustomerRepository.SaveCustomer(customer);
-            customer.Id = _unitofWork.Save();
+            _unitofWork.Save();
 
             return customer;
         }

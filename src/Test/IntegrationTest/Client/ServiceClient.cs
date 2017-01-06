@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using IntegrationTest.Response;
 using Newtonsoft.Json;
@@ -15,18 +14,17 @@ namespace IntegrationTest.Client
         private readonly HttpClient _client;
         private const string SaveUrl = "http://localhost:2967/api/service/SaveCustomer";
         private const string GetUrl = "http://localhost:2967/api/service/GetData";
+        private const string GetCustomerUrl = "http://localhost:2967/api/service/GetCustomers";
 
         public ServiceClient(HttpClient client)
         {
             _client = client;
         }
 
-        public Task<string> GetData(string guidData, string authorization)
+        public Task<string> GetData(string authorization)
         {
 
-            var response = _client.CustomGetAsync(GetUrl,
-                                                        x => x.Headers.Add("Guid", guidData),
-                                                        x => x.Headers.Authorization 
+            var response = _client.CustomGetAsync(GetUrl, x => x.Headers.Authorization
                                                                = new AuthenticationHeaderValue("Bearer", authorization))
                                   .GetAwaiter().GetResult();
 
@@ -35,28 +33,20 @@ namespace IntegrationTest.Client
             return Task.FromResult(data);
         }
 
-        public Task<string> GetData1(string guidData, string authorization)
-        {
-
-            var response = _client.CustomGetAsync(GetUrl,
-                                                        x => x.Headers.Add("Guid", guidData),
-                                                        x => x.Headers.Authorization
-                                                               = new AuthenticationHeaderValue("Bearer", authorization))
-                                  .GetAwaiter().GetResult();
-
-            var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
-            return Task.FromResult(data);
-        }
-
-        public Task<CustomerSaveResponse> SaveCustomerAbstracted(string name, string lastName, IEnumerable<string> pins)
+        public Task<CustomerSaveResponse> SaveCustomerAbstracted(string name, string lastName, IEnumerable<string> pins
+                        , string authorization)
         {
             var customersResponse = new CustomerSaveResponse();
-            var guidData = new Guid().ToString();
             var customer = PrepareCustomer(name, lastName, pins);
-            var customerData = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, "application/json");
-            var response = _client.PostAsJsonAsync(SaveUrl, customer, x => x.Headers.Add("Guid", guidData)).GetAwaiter().GetResult();
-            var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var response = _client.PostAsJsonAsync(SaveUrl, customer, x => x.Headers.Authorization
+                                                                = new AuthenticationHeaderValue("Bearer", authorization))
+                                  .GetAwaiter()
+                                  .GetResult();
+
+            var data = response.Content
+                               .ReadAsStringAsync()
+                               .GetAwaiter()
+                               .GetResult();
 
             if (response.IsSuccessStatusCode)
             {
@@ -73,6 +63,32 @@ namespace IntegrationTest.Client
                 customersResponse.Status = response.StatusCode;
                 Console.WriteLine("Error Occurred While Saving User");
                 Console.WriteLine(customersResponse.ErrorDto.ToString());
+            }
+
+            return Task.FromResult(customersResponse);
+        }
+
+        public Task<CustomersGetResponse> GetCustomers(string authorization)
+        {
+            var customersResponse = new CustomersGetResponse();
+
+            var response = _client.CustomGetAsync(GetCustomerUrl, x => x.Headers.Authorization
+                                                           = new AuthenticationHeaderValue("Bearer", authorization))
+                                                           .GetAwaiter().GetResult();
+
+            var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseData = JsonConvert.DeserializeObject<List<CustomerDto>>(data, CommonFuncionality.IgnoreNullSettings());
+                customersResponse.CustomerDtos = responseData;
+                customersResponse.Status = response.StatusCode;
+            }
+            else
+            {
+                var errorDto = JsonConvert.DeserializeObject<ErrorDto>(data, CommonFuncionality.IgnoreNullSettings());
+                customersResponse.ErrorDto = errorDto;
+                customersResponse.Status = response.StatusCode;
             }
 
             return Task.FromResult(customersResponse);

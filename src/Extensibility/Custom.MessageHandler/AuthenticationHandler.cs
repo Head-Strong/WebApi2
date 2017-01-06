@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
-using System.Security.Claims;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using Common.Func.CustomActionResult;
 using Service.Interface;
 
@@ -37,7 +33,7 @@ namespace Custom.MessageHandler
                 return responseMessage;
             }
 
-            if (authorization.Scheme.Equals("Bearer", StringComparison.OrdinalIgnoreCase))
+            if (!authorization.Scheme.Equals("Bearer", StringComparison.OrdinalIgnoreCase))
             {
                 var responseMessage = PrepareResponseMessage("Authorization Schema is Bearer.", request);
                 return responseMessage;

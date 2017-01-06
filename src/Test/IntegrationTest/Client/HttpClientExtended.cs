@@ -8,25 +8,23 @@ namespace IntegrationTest.Client
 {
     public static class HttpClientExtended
     {
-        public static Task<HttpResponseMessage> CustomGetAsync(this HttpClient httpClient, string url, Action<HttpRequestMessage> authorization, Action<HttpRequestMessage> profiles)
+        public static Task<HttpResponseMessage> CustomGetAsync(this HttpClient httpClient, string url, Action<HttpRequestMessage> authorization)
         {
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
 
-            profiles(httpRequestMessage);
             authorization(httpRequestMessage);
 
             return httpClient.SendAsync(httpRequestMessage);
         }
 
-        public static Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient httpClient, string url, T value, Action<HttpRequestMessage> manipulateData)
+        public static Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient httpClient, string url, T value, Action<HttpRequestMessage> authorization)
         {
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url)
             {
                 Content = new StringContent(JsonConvert.SerializeObject(value), Encoding.UTF8, "application/json")
-                //Content = new ObjectContent<T>(value, new JsonMediaTypeFormatter(), (MediaTypeHeaderValue)null)
             };
 
-            manipulateData(httpRequestMessage);
+            authorization(httpRequestMessage);
 
             return httpClient.SendAsync(httpRequestMessage);
         }

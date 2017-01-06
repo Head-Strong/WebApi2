@@ -2,99 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using IntegrationTest.Client;
 using IntegrationTest.Response;
-using Newtonsoft.Json;
 
 namespace IntegrationTest
 {
     public static class Program
     {
+        #region Url Keys
         private const string SaveUrl = "http://localhost:2967/api/service/SaveCustomer";
         private const string GetUrl = "http://localhost:2967/api/service/GetCustomers";
         private const string ServerGetUrl = "http://localhost:80/api/service/getdata";
         private const string LocalGetUrl = "http://localhost:2967/api/service/getdata";
+        #endregion
+
         private static readonly IServiceClient ServiceClient = new ServiceClient(CommonFuncionality.GetHttpClient());
 
         private static void TestPing()
         {
-            
-
             Parallel.For(0, 5,
                 i =>
                 {
-                    var guidData = Guid.NewGuid().ToString();
                     var authorization = Guid.NewGuid().ToString();
-                    //var result1 = ServiceClient.GetData1("GUID", "Auth").Result;
-                    //Console.WriteLine(result1);
-                    var result = ServiceClient.GetData(guidData, authorization).Result;
+                    var result = ServiceClient.GetData(authorization).Result;
                     Console.WriteLine(result);
-
-                    //using (var httpClient = new HttpClient())
-                    //{
-                    //var guidData = Guid.NewGuid().ToString();
-                    ////_httpClient.DefaultRequestHeaders.Add("Guid", guidData);
-                    //var response = _httpClient.CustomGetAsync("http://localhost:2967/api/service/GetData", x => x.Headers.Add("Guid", guidData)).GetAwaiter().GetResult();
-                    //var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                    //Console.WriteLine("Count :" + i + " Other Data :" + data);
-                    //Console.WriteLine("===============");
-
-                    //var result = SaveCustomerAbstracted(guidData, guidData, new List<string> { guidData });
-                    //if (result.Status == HttpStatusCode.OK)
-                    //{
-                    //    Console.WriteLine("Saved Cusomer Id" + result.CustomerDto.Id);
-                    //}
-                    //else
-                    //{
-                    //    Console.WriteLine("Error" + result.ErrorDto.ErrorCategory);
-                    //}
-
                 });
-
-
-
-            //for (var i = 1; i <= 10000; i++)
-            //{
-            //    //Console.Clear();
-            //    Console.WriteLine("Ping " + i);
-            //    Console.ForegroundColor = i % 2 == 0 ? ConsoleColor.Red : ConsoleColor.Yellow;
-
-            //    //var allCustomers = GetAllCustomers();
-            //    //if (allCustomers.Status == HttpStatusCode.OK)
-            //    //{
-            //    //    Console.WriteLine("Success for Ping" + i);
-            //    //    foreach (var allCustomersCustomerDto in allCustomers.CustomerDtos)
-            //    //    {
-            //    //        Console.WriteLine(allCustomersCustomerDto.ToString());
-            //    //    }
-            //    //}
-            //    //else
-            //    //{
-            //    //    Console.WriteLine("Error For Ping:" + i);
-            //    //    Console.WriteLine(allCustomers.ErrorDto.ToString());
-            //    //}
-
-            //    //using (var httpClient = new HttpClient())
-            //    //{
-            //    _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //    var response = _httpClient.CustomGetAsync("https://graph.facebook.com/jammuestates/").GetAwaiter().GetResult();
-            //    var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            //    Console.WriteLine(data);
-            //    Console.WriteLine("===============");
-            //    //}
-
-            //    Console.WriteLine("Ping Finished " + i);
-            //}
         }
 
         public static void Main(string[] args)
         {
-            // var retrier = new Retrier<CustomersGetResponse>();
-            // var resultResponse = retrier.RetryWithDelay(GetCustomerResponse);
-
             try
             {
                 TestPing();
@@ -152,11 +89,6 @@ namespace IntegrationTest
             } while (continueVaribale == 1);
         }
 
-        private static CustomersGetResponse GetCustomerResponse()
-        {
-            throw new NotImplementedException();
-        }
-
         private static void GetCustomerById()
         {
             int customerId;
@@ -177,29 +109,8 @@ namespace IntegrationTest
 
         private static CustomersGetResponse GetAllCustomers()
         {
-            var customersResponse = new CustomersGetResponse();
-
-            using (var httpClient = new HttpClient())
-            {
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var response = httpClient.GetAsync(GetUrl).GetAwaiter().GetResult();
-                var data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseData = JsonConvert.DeserializeObject<List<CustomerDto>>(data, CommonFuncionality.IgnoreNullSettings());
-                    customersResponse.CustomerDtos = responseData;
-                    customersResponse.Status = response.StatusCode;
-                }
-                else
-                {
-                    var errorDto = JsonConvert.DeserializeObject<ErrorDto>(data, CommonFuncionality.IgnoreNullSettings());
-                    customersResponse.ErrorDto = errorDto;
-                    customersResponse.Status = response.StatusCode;
-                }
-            }
-
-            return customersResponse;
+            var customersResponse = ServiceClient.GetCustomers(Guid.NewGuid().ToString());
+            return customersResponse.Result;
         }
 
         private static void SaveCustomer()
@@ -223,11 +134,7 @@ namespace IntegrationTest
                 pins.Add(Console.ReadLine());
             }
 
-            //var sp = ServicePointManager.FindServicePoint(new Uri(""));
-            //sp.ConnectionLeaseTimeout = 2000;
-
-
-            ServiceClient.SaveCustomerAbstracted(name, lastName, pins);
-        }              
+            ServiceClient.SaveCustomerAbstracted(name, lastName, pins, Guid.NewGuid().ToString());
+        }
     }
 }
