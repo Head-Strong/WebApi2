@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Security.Claims;
-using System.Threading;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AutoMapper;
 using Controller.Implementation.AutoMapperConfigMapper;
-using Controller.Implementation.CustomActionResult;
 using Controller.Interface;
 using Domains;
 using Dto;
@@ -19,11 +11,19 @@ using Service.Interface;
 
 namespace Controller.Implementation
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ServiceController : ApiController, IServiceController
     {
         private readonly IService _service;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="dtoDomainMapper"></param>
         public ServiceController(IService service, IDtoDomainMapper dtoDomainMapper)
         {
             _service = service;
@@ -36,35 +36,7 @@ namespace Controller.Implementation
         /// <returns>Success Response</returns>
         [ResponseType(typeof(string))]
         public IHttpActionResult GetData()
-
         {
-            //var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
-            //var commaSepratedProfiles = string.Empty;
-            //if (claimsPrincipal != null)
-            //{
-            //    var claims = claimsPrincipal
-            //        .Claims.ToList().FindAll(x => x.Type.Contains("role"));
-
-            //    var claimsAssociatedWithUser = claims.Select(claim => claim.Value).ToArray();
-
-            //    commaSepratedProfiles = string.Join(",", claimsAssociatedWithUser);
-            //}
-
-            //var request = Request.Headers;
-            //var guidValues = request.GetValues("Guid");
-            //var guid = string.Empty;
-
-            //var authKey = request.Authorization;
-
-            //if (guidValues != null)
-            //{
-            //    guid = guidValues.FirstOrDefault();
-            //}
-
-            ////Thread.Sleep(TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Sleep"])));
-
-            //return Ok(guid + "~" + authKey.Parameter + "~" + commaSepratedProfiles);
-
             return Ok("Ok");
         }
 
@@ -76,10 +48,6 @@ namespace Controller.Implementation
         [ResponseType(typeof(ErrorDto))]
         public IHttpActionResult GetCustomers()
         {
-            // throw new Exception();
-
-            // return new InternalServerErrorActionResult("InvalidError", new List<string> { "Invalid Error" });
-
             var domainCustomers = _service.GetCustomers();
 
             return Ok(domainCustomers.Select(domainCustomer => _mapper.Map<Customer, CustomerDto>(domainCustomer)).ToList());

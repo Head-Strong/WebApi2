@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Dto
 {
@@ -25,6 +26,9 @@ namespace Dto
         /// Serialized the data
         /// </summary>
         /// <returns></returns>
-        //public override string ToString() => this.ToString();
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

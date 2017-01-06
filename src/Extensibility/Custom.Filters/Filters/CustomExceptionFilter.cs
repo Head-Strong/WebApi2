@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http.Filters;
-using Controller.Implementation.CustomActionResult;
+using Common.Func.CustomActionResult;
 
-namespace Custom.Filters
+namespace Custom.Filters.Filters
 {
     public class CustomExceptionFilter : ExceptionFilterAttribute
     {
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {
-            var response = new ForbiddenActionResult("Authorized", new List<string> { "Forbidden Error" }).Response;
+            var request = actionExecutedContext.Request;
+
+            var response = new ForbiddenActionResult("Authorized", new List<string> { "Forbidden Error" }, request).Response;
 
             actionExecutedContext.Response = response;
         }

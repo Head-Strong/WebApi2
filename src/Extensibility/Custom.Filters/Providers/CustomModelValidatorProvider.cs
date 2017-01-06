@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Http.Metadata;
-using System.Web.Http.Validation;
 using Dto;
 using Dto.Validator;
+using ModelMetadata = System.Web.Http.Metadata.ModelMetadata;
+using ModelValidator = System.Web.Http.Validation.ModelValidator;
+using ModelValidatorProvider = System.Web.Http.Validation.ModelValidatorProvider;
 
-namespace Custom.Filters
+namespace Custom.Filters.Providers
 {
     public class CustomModelValidatorProvider : ModelValidatorProvider
     {

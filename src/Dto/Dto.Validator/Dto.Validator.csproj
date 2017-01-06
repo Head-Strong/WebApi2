@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddressDtoValidator.cs" />
+    <Compile Include="CustomerDtoMetaData.cs" />
     <Compile Include="CustomerDtoValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

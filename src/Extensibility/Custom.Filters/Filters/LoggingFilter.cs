@@ -1,7 +1,7 @@
 ﻿using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 
-namespace Custom.Filters
+namespace Custom.Filters.Filters
 {
     public class LoggingFilter : ActionFilterAttribute
     {

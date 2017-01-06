@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Web.Http.Filters;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Custom.Filters.Models
 {

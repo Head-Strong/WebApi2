@@ -1,8 +1,8 @@
 ﻿[
   {
     "ActionName": "SaveCustomer",
-    "ControllerName": "customer",
-    "Filter": "Service",
+    "ControllerName": "Service",
+    "Filter": "ValidateAttribute",
     "Roles": ""
   },
   {

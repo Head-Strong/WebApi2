@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Controllers;
 
-namespace Custom.Filters
+namespace Custom.Filters.Filters
 {
     public class CustomAuthorizeAttribute : AuthorizeAttribute
     {

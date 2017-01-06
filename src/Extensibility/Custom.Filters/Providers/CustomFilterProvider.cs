@@ -6,7 +6,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Custom.Filters.Models;
 
-namespace Custom.Filters
+namespace Custom.Filters.Providers
 {
     public class CustomFilterProvider : IFilterProvider
     {
@@ -23,7 +23,7 @@ namespace Custom.Filters
 
             const string assemblyName = "Custom.Filters";
 
-            var filterName = assemblyName + "." + filterConfig.Filter;
+            var filterName = assemblyName + ".Filters." + filterConfig.Filter;
 
             var typeofFilter = Type.GetType(filterName + "," + assemblyName);
 

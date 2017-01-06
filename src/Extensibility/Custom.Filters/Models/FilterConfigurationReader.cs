@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Web;
 using Newtonsoft.Json;
 
 namespace Custom.Filters.Models

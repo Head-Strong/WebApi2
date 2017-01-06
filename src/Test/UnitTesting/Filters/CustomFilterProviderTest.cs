@@ -6,6 +6,7 @@ using System.Web.Http.Controllers;
 using Controller.Implementation;
 using Controller.Implementation.AutoMapperConfigMapper;
 using Custom.Filters;
+using Custom.Filters.Providers;
 using Moq;
 using NUnit.Framework;
 using Service.Interface;

@@ -4,53 +4,17 @@
         <name>Controller.Implementation</name>
     </assembly>
     <members>
-        <member name="T:Controller.Implementation.CustomActionResult.InternalServerErrorActionResult">
+        <member name="T:Controller.Implementation.ServiceController">
             <summary>
             
             </summary>
         </member>
-        <member name="M:Controller.Implementation.CustomActionResult.InternalServerErrorActionResult.#ctor(System.String,System.Collections.Generic.List{System.String})">
+        <member name="M:Controller.Implementation.ServiceController.#ctor(Service.Interface.IService,Controller.Implementation.AutoMapperConfigMapper.IDtoDomainMapper)">
             <summary>
             
             </summary>
-            <param name="errorCategory"></param>
-            <param name="errorDescriptions"></param>
-        </member>
-        <member name="T:Controller.Implementation.CustomActionResult.UnauthorizedActionResult">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Controller.Implementation.CustomActionResult.UnauthorizedActionResult.#ctor(System.String,System.Collections.Generic.List{System.String})">
-            <summary>
-            
-            </summary>
-            <param name="errorCategory"></param>
-            <param name="errorDescriptions"></param>
-        </member>
-        <member name="T:Controller.Implementation.CustomActionResult.ForbiddenActionResult">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Controller.Implementation.CustomActionResult.ForbiddenActionResult.#ctor(System.String,System.Collections.Generic.List{System.String})">
-            <summary>
-            
-            </summary>
-            <param name="errorCategory"></param>
-            <param name="errorDescriptions"></param>
-        </member>
-        <member name="T:Controller.Implementation.CustomActionResult.BadActionResult">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Controller.Implementation.CustomActionResult.BadActionResult.#ctor(System.String,System.Collections.Generic.List{System.String})">
-            <summary>
-            
-            </summary>
-            <param name="errorCategory"></param>
-            <param name="errorDescriptions"></param>
+            <param name="service"></param>
+            <param name="dtoDomainMapper"></param>
         </member>
         <member name="M:Controller.Implementation.ServiceController.GetData">
             <summary>
