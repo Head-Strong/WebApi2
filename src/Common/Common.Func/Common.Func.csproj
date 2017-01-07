@@ -52,11 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomActionResult\BadActionResult.cs" />
-    <Compile Include="CustomActionResult\BaseHttpActionResult.cs" />
-    <Compile Include="CustomActionResult\ForbiddenActionResult.cs" />
-    <Compile Include="CustomActionResult\InternalServerErrorActionResult.cs" />
-    <Compile Include="CustomActionResult\UnauthorizedActionResult.cs" />
+    <Compile Include="CustomActionResult\CustomHttpActionResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

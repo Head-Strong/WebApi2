@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,7 +51,7 @@ namespace Custom.MessageHandler
 
         private static HttpResponseMessage PrepareResponseMessage(string message, HttpRequestMessage request)
         {
-            var responseMessage = new UnauthorizedActionResult("Authorized", new List<string> { message }, request).Response;
+            var responseMessage = new CustomHttpActionResult("Authorized", message, request, HttpStatusCode.Unauthorized).Response;
 
             return responseMessage;
         }

@@ -1,14 +1,15 @@
-﻿using System.Web.Http;
+﻿using System.Net.Http.Formatting;
+using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.Filters;
-using Custom.Filters;
 using Custom.Filters.Filters;
 using Custom.Filters.Models;
 using Custom.Filters.Providers;
+using Custom.Loggers;
 using Custom.MessageHandler;
 using DependencyRegisterResolver;
-using FluentValidation.WebApi;
+using Serilog.Utility;
 using Service.Interface;
 
 namespace WebApplication1
@@ -18,49 +19,65 @@ namespace WebApplication1
     /// </summary>
     public static class WebApiConfig
     {
+        private static ILoggerSetup _loggerSetup;
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="config"></param>
         public static void Register(HttpConfiguration config)
         {
-            config.EnableCors(new EnableCorsAttribute("*","*","*"));
+            config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
+            ConatinerSetup(config);
+            _loggerSetup = config.DependencyResolver.GetService(typeof(ILoggerSetup)) as ILoggerSetup;
+            MapRoutes(config);
+            FilterConfigurationReader.Get();
+            ConfigureHandlers(config);
+            RegisterFilters(config);
+            ConfigureLoggers(config);
+            SwaggerConfig.Register();
+        }
 
-            // Web API configuration and services
-            var container = new ContainerFactory(ContainerFactory.Container.Unity).Instantiate();
+        private static void ConfigureHandlers(HttpConfiguration config)
+        {
+            var resolvedService = config.DependencyResolver.GetService(typeof(IService)) as IService;
+            config.MessageHandlers.Add(new LoggingHandler(_loggerSetup));
+            config.MessageHandlers.Add(new AuthenticationHandler(resolvedService));
+            config.Services.Replace(typeof(IExceptionHandler), new CustomExceptionHandler());
+        }
 
-            container = container.RegisterContainer();
+        private static void ConfigureLoggers(HttpConfiguration config)
+        {
+            config.Services.Replace(typeof(IExceptionLogger), new CustomExceptionLogger(_loggerSetup));
+            //config.Services.Replace(typeof(IFormatterLogger), new CustomFormatLogger());
+        }
 
-            config.DependencyResolver = container.ResolveContainer().DependencyResolver;
-            
+        private static void MapRoutes(HttpConfiguration config)
+        {
             // Web API routes
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{action}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                "DefaultApi",
+                "api/{controller}/{action}/{id}",
+                new { id = RouteParameter.Optional }
             );
+        }
 
-            var data12 = FilterConfigurationReader.Get();
+        private static void ConatinerSetup(HttpConfiguration config)
+        {
+            // Web API configuration and services
+            var container = new ContainerFactory(ContainerFactory.Container.Unity).Instantiate();
+            container = container.RegisterContainer();
+            config.DependencyResolver = container.ResolveContainer().DependencyResolver;
+        }
 
-            var resolvedService = config.DependencyResolver.GetService(typeof(IService)) as IService;
-
-            config.MessageHandlers.Add(new AuthenticationHandler(resolvedService));
-
+        private static void RegisterFilters(HttpConfiguration config)
+        {
             config.Services.Add(typeof(IFilterProvider), new CustomFilterProvider());
-            
             config.Filters.Add(new CustomExceptionFilter());
-
             config.Filters.Add(new LoggingFilter());
-
-            config.Services.Replace(typeof(IExceptionLogger), new CustomExceptionLogger());
-
-            config.Services.Replace(typeof(IExceptionHandler), new CustomExceptionHandler());
-
             config.Services.Add(typeof(System.Web.Http.Validation.ModelValidatorProvider), new CustomModelValidatorProvider());
-
-            SwaggerConfig.Register();
         }
     }
 }

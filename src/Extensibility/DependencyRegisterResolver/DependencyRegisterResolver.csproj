@@ -99,6 +99,10 @@
     <Compile Include="Resolver\WindsorContainerResolver.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Serilog.Utility\Serilog.Utility.csproj">
+      <Project>{D45A1F2B-26FD-4CB8-8F55-BC9BA386407C}</Project>
+      <Name>Serilog.Utility</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Controller\Controller.Implementation\Controller.Implementation.csproj">
       <Project>{5b70b3e9-0700-4ca2-9b96-deb4a1214d30}</Project>
       <Name>Controller.Implementation</Name>

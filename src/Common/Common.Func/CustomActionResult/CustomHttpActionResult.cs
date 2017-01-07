@@ -11,17 +11,21 @@ namespace Common.Func.CustomActionResult
     /// <summary>
     /// 
     /// </summary>
-    public abstract class BaseHttpActionResult : IHttpActionResult
+    public class CustomHttpActionResult : IHttpActionResult
     {
         private readonly string _errorCategory;
         private readonly List<string> _errorDescriptions;
         private readonly HttpRequestMessage _requestMessage;
+        private readonly HttpStatusCode _statusCode;
         private HttpResponseMessage _httpResponseMessage;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        protected HttpStatusCode StatusCode;
+        public CustomHttpActionResult(string errorCategory, List<string> errorDescriptions, HttpRequestMessage requestMessage, HttpStatusCode statusCode)
+        {
+            _errorCategory = errorCategory;
+            _errorDescriptions = errorDescriptions;
+            _requestMessage = requestMessage;
+            _statusCode = statusCode;
+        }
 
 
         /// <summary>
@@ -30,11 +34,11 @@ namespace Common.Func.CustomActionResult
         /// <param name="errorCategory"></param>
         /// <param name="errorDescriptions"></param>
         /// <param name="requestMessage"></param>
-        protected BaseHttpActionResult(string errorCategory, List<string> errorDescriptions, HttpRequestMessage requestMessage)
+        /// <param name="statusCode"></param>
+        public CustomHttpActionResult(string errorCategory, string errorDescriptions,
+                HttpRequestMessage requestMessage, HttpStatusCode statusCode) : this(errorCategory, new List<string> { errorDescriptions }, requestMessage, statusCode)
         {
-            _errorCategory = errorCategory;
-            _errorDescriptions = errorDescriptions;
-            _requestMessage = requestMessage;
+
         }
 
         /// <summary>
@@ -46,7 +50,7 @@ namespace Common.Func.CustomActionResult
         {
             _httpResponseMessage = new HttpResponseMessage
             {
-                StatusCode = StatusCode,
+                StatusCode = _statusCode,
                 Content = PrepareErrorContent(_errorCategory, _errorDescriptions),
                 RequestMessage = _requestMessage
             };

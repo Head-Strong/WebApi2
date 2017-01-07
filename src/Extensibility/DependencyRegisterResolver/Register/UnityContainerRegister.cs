@@ -8,6 +8,7 @@ using ORM.Data;
 using Repository.Implementation;
 using Repository.Implementation.AutoMapperConfigMapper;
 using Repository.Interface;
+using Serilog.Utility;
 using Service.Interface;
 
 namespace DependencyRegisterResolver.Register
@@ -32,8 +33,13 @@ namespace DependencyRegisterResolver.Register
             RegisterRepository();
             RegisterServices();
             RegisterController();
-
+            Utility();
             return _container;
+        }
+
+        private static void Utility()
+        {
+            _container.RegisterType<ILoggerSetup, LoggerSetup>(new ContainerControlledLifetimeManager());
         }
 
         #region Helper Methods
@@ -52,7 +58,7 @@ namespace DependencyRegisterResolver.Register
             _container.RegisterType<ICustomerRepository, CustomerRepository>(new HierarchicalLifetimeManager());
 
             _container.RegisterType<IAddressRepository, AddressRepository>(new HierarchicalLifetimeManager());
-            
+
             _container.RegisterType<IUnitofWork, UnitofWork>(new HierarchicalLifetimeManager());
         }
 
@@ -66,18 +72,6 @@ namespace DependencyRegisterResolver.Register
         {
             _container.RegisterType<IDtoDomainMapper, DtoDomainMapper>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IServiceController, ServiceController>(new HierarchicalLifetimeManager());
-        }
-
-
-        public static Tuple<DbContext, IService, IUnitofWork> GetService()
-        {
-            var context = _container.Resolve<TestDatabaseEntities>();
-
-            var service = _container.Resolve<IService>();
-
-            var uow = _container.Resolve<IUnitofWork>();
-
-            return new Tuple<DbContext, IService, IUnitofWork>(context, service, uow);
         }
 
         #endregion

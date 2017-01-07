@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using Serilog.Utility;
 
 namespace WebApplication1
 {
@@ -13,6 +14,20 @@ namespace WebApplication1
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void Application_Error()
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void Application_End()
+        {
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Web.Http.Filters;
 using Common.Func.CustomActionResult;
 
@@ -10,7 +11,7 @@ namespace Custom.Filters.Filters
         {
             var request = actionExecutedContext.Request;
 
-            var response = new ForbiddenActionResult("Authorized", new List<string> { "Forbidden Error" }, request).Response;
+            var response = new CustomHttpActionResult("InternalServerError", "Internal Server Error", request, HttpStatusCode.InternalServerError).Response;
 
             actionExecutedContext.Response = response;
         }

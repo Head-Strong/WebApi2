@@ -159,9 +159,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Serilog.Utility\Serilog.Utility.csproj">
+      <Project>{D45A1F2B-26FD-4CB8-8F55-BC9BA386407C}</Project>
+      <Name>Serilog.Utility</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Extensibility\Custom.Filters\Custom.Filters.csproj">
       <Project>{1102D64D-D237-428B-8384-D2E0112D4752}</Project>
       <Name>Custom.Filters</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Extensibility\Custom.Loggers\Custom.Loggers.csproj">
+      <Project>{66FCAFF8-8971-4893-A9B7-0EA9C776BD13}</Project>
+      <Name>Custom.Loggers</Name>
     </ProjectReference>
     <ProjectReference Include="..\Extensibility\Custom.MessageHandler\Custom.MessageHandler.csproj">
       <Project>{A0332B4A-014E-4AC6-99FB-0FBD387B6334}</Project>

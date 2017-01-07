@@ -1,9 +1,8 @@
 using System.Net;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.ExceptionHandling;
-using System.Web.Http.Results;
+using Common.Func.CustomActionResult;
 
 namespace Custom.MessageHandler
 {
@@ -12,17 +11,12 @@ namespace Custom.MessageHandler
         public override Task HandleAsync(ExceptionHandlerContext context, CancellationToken cancellationToken)
         {
             const string errorMessage = "An unexpected error occured";
-            var response = context.Request.CreateResponse(HttpStatusCode.InternalServerError,
-                new
-                {
-                    Message = errorMessage
-                });
 
-            response.Headers.Add("X-Error", errorMessage);
-
-            context.Result = new ResponseMessageResult(response);
+            var response = new CustomHttpActionResult("InternalServerError",
+                                    errorMessage, context.Request, HttpStatusCode.InternalServerError);
+            context.Result = response;
 
             return base.HandleAsync(context, cancellationToken);
-        }        
+        }
     }
 }
