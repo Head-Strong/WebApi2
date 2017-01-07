@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 using Serilog.Utility;
 
 namespace Custom.MessageHandler
@@ -12,17 +13,20 @@ namespace Custom.MessageHandler
             _loggerSetup = loggerSetup;
         }
 
-        protected override void IncommingMessage(string correlationId, HttpRequestMessage httpRequestMessage)
+        protected override async Task IncommingMessage(string uniqueid, HttpRequestMessage httpRequestMessage)
         {
-            _loggerSetup.CustomInformation(informationMessage: correlationId, request: httpRequestMessage.Content.ReadAsStringAsync().Result,
-                host: "LoggerHandler-Incoming");
+            await Task.Run(() => _loggerSetup.CustomInformation(informationMessage: uniqueid,
+                                                request: httpRequestMessage.Content.ReadAsStringAsync().Result,
+                                                host: "LoggerHandler-Incoming"));
         }
 
-        protected override void OutgoingMessage(string correlationId, HttpRequestMessage httpRequestMessage,
+        protected override async Task OutgoingMessage(string uniqueId, HttpRequestMessage httpRequestMessage,
             HttpResponseMessage httpResponseMessage)
         {
-            _loggerSetup.CustomInformation(informationMessage: correlationId, request: httpRequestMessage.Content.ReadAsStringAsync().Result,
-                response: httpResponseMessage.Content.ReadAsStringAsync().Result, host: "LoggerHandler-Outgoing");
+            await Task.Run(() => _loggerSetup.CustomInformation(informationMessage: uniqueId,
+                                                request: httpRequestMessage.Content.ReadAsStringAsync().Result,
+                                                response: httpResponseMessage.Content.ReadAsStringAsync().Result,
+                                                host: "LoggerHandler-Outgoing"));
         }
     }
 }

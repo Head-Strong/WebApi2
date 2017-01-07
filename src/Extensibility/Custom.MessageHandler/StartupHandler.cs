@@ -7,21 +7,21 @@ namespace Custom.MessageHandler
 {
     public abstract class StartupHandler : DelegatingHandler
     {
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var correlationId = $"{DateTime.Now.Ticks}{Thread.CurrentThread.ManagedThreadId}";
+            var uniqueid = $"{DateTime.Now.Ticks}{Thread.CurrentThread.ManagedThreadId}";
 
-            IncommingMessage(correlationId, request);
+            await IncommingMessage(uniqueid, request);
 
             var response = base.SendAsync(request, cancellationToken).Result;
 
-            OutgoingMessage(correlationId, request, response);
+            await OutgoingMessage(uniqueid, request, response);
 
-            return Task.FromResult(response);
+            return response;
         }
 
-        protected abstract void IncommingMessage(string correlationId, HttpRequestMessage httpRequestMessage);
+        protected abstract Task IncommingMessage(string uniqueid, HttpRequestMessage httpRequestMessage);
 
-        protected abstract void OutgoingMessage(string correlationId, HttpRequestMessage httpRequestMessage, HttpResponseMessage httpResponseMessage);
+        protected abstract Task OutgoingMessage(string uniqueId, HttpRequestMessage httpRequestMessage, HttpResponseMessage httpResponseMessage);
     }
 }
