@@ -13,5 +13,7 @@
 
         void CustomFatal(string user = "", string request = "", string response = "", string enviornment = "", string host = "",
             string fatalMessage = "");
+
+        void CloseAndFlush();
     }
 }

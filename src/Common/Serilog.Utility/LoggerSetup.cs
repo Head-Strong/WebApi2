@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
-using Serilog.Core;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
 
@@ -9,8 +8,6 @@ namespace Serilog.Utility
 {
     public class LoggerSetup : ILoggerSetup
     {
-        private readonly Logger _logger;
-
         // http://blachniet.com/blog/serilog-good-habits/
         public LoggerSetup()
         {
@@ -21,7 +18,7 @@ namespace Serilog.Utility
 
             columnOptions.Store.Add(StandardColumn.LogEvent);
 
-            _logger = new LoggerConfiguration().MinimumLevel.Information()
+            Log.Logger = new LoggerConfiguration().MinimumLevel.Information()
                                                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                                                    .MinimumLevel.Override("System", LogEventLevel.Error)
                                                    .WriteTo.MSSqlServer(connectionString, tableName, LogEventLevel.Information,
@@ -64,13 +61,20 @@ namespace Serilog.Utility
             BaseLog(user, request, response, enviornment, host).Fatal(fatalMessage);
         }
 
-        private ILogger BaseLog(string user, string request, string response, string enviornment, string host)
+        private static ILogger BaseLog(string user, string request, string response, string enviornment, string host)
         {
-            return _logger.ForContext(CustomColumn.User.ToString(), user)
+            return Log.Logger.ForContext(CustomColumn.User.ToString(), user)
                 .ForContext(CustomColumn.Request.ToString(), request)
                  .ForContext(CustomColumn.Response.ToString(), response)
                 .ForContext(CustomColumn.Enviornment.ToString(), enviornment)
                 .ForContext(CustomColumn.Host.ToString(), host);
-        }        
+
+            
+        }
+
+        public void CloseAndFlush()
+        {
+            Log.CloseAndFlush();
+        }
     }
 }

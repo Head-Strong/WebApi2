@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Formatting;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.Filters;
@@ -19,7 +18,10 @@ namespace WebApplication1
     /// </summary>
     public static class WebApiConfig
     {
-        private static ILoggerSetup _loggerSetup;
+        /// <summary>
+        /// 
+        /// </summary>
+        public static ILoggerSetup LoggerSetup { get; private set; }
 
         /// <summary>
         /// 
@@ -29,7 +31,7 @@ namespace WebApplication1
         {
             config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
             ConatinerSetup(config);
-            _loggerSetup = config.DependencyResolver.GetService(typeof(ILoggerSetup)) as ILoggerSetup;
+            LoggerSetup = config.DependencyResolver.GetService(typeof(ILoggerSetup)) as ILoggerSetup;
             MapRoutes(config);
             FilterConfigurationReader.Get();
             ConfigureHandlers(config);
@@ -41,14 +43,14 @@ namespace WebApplication1
         private static void ConfigureHandlers(HttpConfiguration config)
         {
             var resolvedService = config.DependencyResolver.GetService(typeof(IService)) as IService;
-            config.MessageHandlers.Add(new LoggingHandler(_loggerSetup));
+            config.MessageHandlers.Add(new LoggingHandler(LoggerSetup));
             config.MessageHandlers.Add(new AuthenticationHandler(resolvedService));
             config.Services.Replace(typeof(IExceptionHandler), new CustomExceptionHandler());
         }
 
         private static void ConfigureLoggers(HttpConfiguration config)
         {
-            config.Services.Replace(typeof(IExceptionLogger), new CustomExceptionLogger(_loggerSetup));
+            config.Services.Replace(typeof(IExceptionLogger), new CustomExceptionLogger(LoggerSetup));
             //config.Services.Replace(typeof(IFormatterLogger), new CustomFormatLogger());
         }
 

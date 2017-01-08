@@ -21,7 +21,7 @@ namespace IntegrationTest
 
         private static void TestPing()
         {
-            Parallel.For(0, 5,
+            Parallel.For(0, 50,
                 i =>
                 {
                     var authorization = Guid.NewGuid().ToString();
