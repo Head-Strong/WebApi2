@@ -1,6 +1,8 @@
 using System.Web.Http;
 using Swashbuckle.Application;
 using System;
+using System.Configuration;
+using System.Web;
 
 namespace WebApplication1
 {
@@ -23,13 +25,13 @@ namespace WebApplication1
                         // However, there may be situations (e.g. proxy and load-balanced environments) where this does not
                         // resolve correctly. You can workaround this by providing your own code to determine the root URL.
                         //
-                        //c.RootUrl(req => GetRootUrlFromAppConfig());
+                        c.RootUrl(req => GetRootUrlFromAppConfig());
 
                         // If schemes are not explicitly provided in a Swagger 2.0 document, then the scheme used to access
                         // the docs is taken as the default. If your API supports multiple schemes and you want to be explicit
                         // about them, you can use the "Schemes" option as shown below.
                         //
-                        //c.Schemes(new[] { "http", "https" });
+                        c.Schemes(new[] { "http", "https" });
 
                         // Use "SingleApiVersion" to describe a single version API. Swagger 2.0 includes an "Info" object to
                         // hold additional metadata for an API. Version and title are required but you can also provide
@@ -212,7 +214,7 @@ namespace WebApplication1
                         // Specify which HTTP operations will have the 'Try it out!' option. An empty paramter list disables
                         // it for all operations.
                         //
-                        //c.SupportedSubmitMethods("GET", "HEAD");
+                        c.SupportedSubmitMethods("GET", "HEAD");
 
                         // Use the CustomAsset option to provide your own version of assets used in the swagger-ui.
                         // It's typically used to instruct Swashbuckle to return your version instead of the default
@@ -247,14 +249,19 @@ namespace WebApplication1
                     });
         }
 
+        private static string GetRootUrlFromAppConfig()
+        {
+            return "http://localhost:2967/api/service";
+        }
+
         private static string GetXmlCommentsPath()
         {
-            return $@"{AppDomain.CurrentDomain.BaseDirectory}\swagger\Controller.Implementation.XML";
+            return $@"{AppDomain.CurrentDomain.BaseDirectory}\bin\Controller.Implementation.XML";
         }
 
         private static string GetDtoXmlCommentsPath()
         {
-            return $@"{AppDomain.CurrentDomain.BaseDirectory}\bin\\Dto.XML";
+            return $@"{AppDomain.CurrentDomain.BaseDirectory}\bin\Dto.XML";
         }
     }
 }

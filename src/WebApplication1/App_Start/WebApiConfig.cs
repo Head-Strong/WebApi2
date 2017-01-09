@@ -44,7 +44,7 @@ namespace WebApplication1
         {
             var resolvedService = config.DependencyResolver.GetService(typeof(IService)) as IService;
             config.MessageHandlers.Add(new LoggingHandler(LoggerSetup));
-            config.MessageHandlers.Add(new AuthenticationHandler(resolvedService));
+            // config.MessageHandlers.Add(new AuthenticationHandler(resolvedService));
             config.Services.Replace(typeof(IExceptionHandler), new CustomExceptionHandler());
         }
 
