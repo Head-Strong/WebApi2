@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AutoMapper;
@@ -8,6 +9,7 @@ using Controller.Interface;
 using Domains;
 using Dto;
 using Service.Interface;
+using Swashbuckle.Swagger.Annotations;
 
 namespace Controller.Implementation
 {
@@ -44,8 +46,10 @@ namespace Controller.Implementation
         /// Get Customers
         /// </summary>
         /// <returns>Get List of Customers</returns>
-        [ResponseType(typeof(IEnumerable<CustomerDto>))]
-        [ResponseType(typeof(ErrorDto))]
+        [SwaggerResponse(HttpStatusCode.OK, "Get List of Customers", typeof(IEnumerable<CustomerDto>))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Validation Errors", typeof(ErrorDto))]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "Authorization Token Is Missing", typeof(ErrorDto))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Internal Server Error", typeof(ErrorDto))]
         public IHttpActionResult GetCustomers()
         {
             var domainCustomers = _service.GetCustomers();

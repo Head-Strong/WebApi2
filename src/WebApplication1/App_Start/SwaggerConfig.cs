@@ -1,8 +1,11 @@
 using System.Web.Http;
 using Swashbuckle.Application;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Web;
+using Swashbuckle.Swagger;
+using System.Web.Http.Description;
 
 namespace WebApplication1
 {
@@ -18,14 +21,14 @@ namespace WebApplication1
         {
             var thisAssembly = typeof(SwaggerConfig).Assembly;
 
-            GlobalConfiguration.Configuration 
+            GlobalConfiguration.Configuration
                 .EnableSwagger(c =>
                     {
                         // By default, the service root url is inferred from the request used to access the docs.
                         // However, there may be situations (e.g. proxy and load-balanced environments) where this does not
                         // resolve correctly. You can workaround this by providing your own code to determine the root URL.
                         //
-                        c.RootUrl(req => GetRootUrlFromAppConfig());
+                        //c.RootUrl(req => GetRootUrlFromAppConfig());
 
                         // If schemes are not explicitly provided in a Swagger 2.0 document, then the scheme used to access
                         // the docs is taken as the default. If your API supports multiple schemes and you want to be explicit
@@ -62,7 +65,7 @@ namespace WebApplication1
                         //c.BasicAuth("basic")
                         //    .Description("Basic HTTP Authentication");
                         //
-						// NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
+                        // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
                         //c.ApiKey("apiKey")
                         //    .Description("API Key Authentication")
                         //    .Name("apiKey")
@@ -159,6 +162,8 @@ namespace WebApplication1
                         //
                         //c.OperationFilter<AssignOAuth2SecurityRequirements>();
 
+                        c.OperationFilter<AddAuthorizationHeaderParameterOperationFilter>();
+
                         // Post-modify the entire Swagger document by wiring up one or more Document filters.
                         // This gives full control to modify the final SwaggerDocument. You should have a good understanding of
                         // the Swagger 2.0 spec. - https://github.com/swagger-api/swagger-spec/blob/master/versions/2.0.md
@@ -185,7 +190,7 @@ namespace WebApplication1
                         // "Logical Name" is passed to the method as shown below.
                         //
                         c.InjectStylesheet(thisAssembly, "WebApplication1.swagger.swagger.css");
-                        c.CustomAsset("index",thisAssembly, "WebApplication1.swagger.index.html");
+                        c.CustomAsset("index", thisAssembly, "WebApplication1.swagger.index.html");
 
                         // Use the "InjectJavaScript" option to invoke one or more custom JavaScripts after the swagger-ui
                         // has loaded. The file must be included in your project as an "Embedded Resource", and then the resource's
@@ -262,6 +267,26 @@ namespace WebApplication1
         private static string GetDtoXmlCommentsPath()
         {
             return $@"{AppDomain.CurrentDomain.BaseDirectory}\bin\Dto.XML";
+        }
+
+
+    }
+
+    internal class AddAuthorizationHeaderParameterOperationFilter : IOperationFilter
+    {
+        public void Apply(Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
+        {
+            if(operation.parameters == null)
+                operation.parameters = new List<Parameter>();
+
+            operation.parameters.Add(new Parameter
+            {
+                name = "Authorization",
+                @in = "header",
+                description = "access token",
+                required = true,
+                type = "string"
+            });
         }
     }
 }
