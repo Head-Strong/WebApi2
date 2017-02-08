@@ -4,36 +4,61 @@
         <name>Controller.Implementation</name>
     </assembly>
     <members>
-        <member name="T:Controller.Implementation.ServiceController">
+        <member name="T:Controller.Implementation.v1.ServiceController">
             <summary>
             
             </summary>
         </member>
-        <member name="M:Controller.Implementation.ServiceController.#ctor(Service.Interface.IService,Controller.Implementation.AutoMapperConfigMapper.IDtoDomainMapper)">
+        <member name="M:Controller.Implementation.v1.ServiceController.#ctor(Service.Interface.IService,Controller.Implementation.AutoMapperConfigMapper.IDtoDomainMapper)">
             <summary>
             
             </summary>
             <param name="service"></param>
             <param name="dtoDomainMapper"></param>
         </member>
-        <member name="M:Controller.Implementation.ServiceController.GetData">
+        <member name="M:Controller.Implementation.v1.ServiceController.GetData">
             <summary>
             Provide Response
             </summary>
             <returns>Success Response</returns>
         </member>
-        <member name="M:Controller.Implementation.ServiceController.GetCustomers">
+        <member name="M:Controller.Implementation.v1.ServiceController.GetCustomers">
             <summary>
             Get Customers
             </summary>
             <returns>Get List of Customers</returns>
         </member>
-        <member name="M:Controller.Implementation.ServiceController.SaveCustomer(Dto.CustomerDto)">
+        <member name="M:Controller.Implementation.v1.ServiceController.SaveCustomer(Dto.CustomerDto)">
             <summary>
             Save Customer
             </summary>
             <param name="customer">Customer</param>
             <returns>Saved Customer</returns>
+        </member>
+        <member name="T:Controller.Implementation.v2.ServiceController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Controller.Implementation.v2.ServiceController.#ctor(Service.Interface.IService,Controller.Implementation.AutoMapperConfigMapper.IDtoDomainMapper)">
+            <summary>
+            
+            </summary>
+            <param name="service"></param>
+            <param name="dtoDomainMapper"></param>
+        </member>
+        <member name="M:Controller.Implementation.v2.ServiceController.GetData">
+            <summary>
+            Provide Response
+            </summary>
+            <returns>Success Response</returns>
+        </member>
+        <member name="M:Controller.Implementation.v2.ServiceController.GetCustomerById(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>

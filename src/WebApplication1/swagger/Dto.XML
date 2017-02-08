@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Dto</name>
+    </assembly>
+    <members>
+        <member name="T:Dto.AddressDto">
+            <summary>
+            Address Details
+            </summary>
+        </member>
+        <member name="P:Dto.AddressDto.AddressId">
+            <summary>
+            Address Id 
+            </summary>
+        </member>
+        <member name="P:Dto.AddressDto.CustomerId">
+            <summary>
+            Customer Id
+            </summary>
+        </member>
+        <member name="P:Dto.AddressDto.Pin">
+            <summary>
+            Pin. Required Field
+            </summary>
+        </member>
+        <member name="T:Dto.CustomerDto">
+            <summary>
+            Customer
+            </summary>
+        </member>
+        <member name="P:Dto.CustomerDto.Id">
+            <summary>
+            Customer Unique Id. Required
+            </summary>
+        </member>
+        <member name="P:Dto.CustomerDto.Name">
+            <summary>
+            Customer Name. Required
+            </summary>
+        </member>
+        <member name="P:Dto.CustomerDto.LastName">
+            <summary>
+            Customer Last name
+            </summary>
+        </member>
+        <member name="P:Dto.CustomerDto.Addresses">
+            <summary>
+            Customer Addresses
+            </summary>
+        </member>
+        <member name="T:Dto.ErrorDto">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dto.ErrorDto.ErrorCategory">
+            <summary>
+            Error Category
+            Business
+            Authorization
+            Authentication
+            Internal Server Error
+            </summary>
+        </member>
+        <member name="P:Dto.ErrorDto.ErrorDescriptions">
+            <summary>
+            Complete Descriptions of Error
+            </summary>
+        </member>
+        <member name="M:Dto.ErrorDto.ToString">
+            <summary>
+            Serialized the data
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

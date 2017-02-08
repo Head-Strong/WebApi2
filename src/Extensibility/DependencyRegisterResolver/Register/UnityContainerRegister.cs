@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using Controller.Implementation;
 using Controller.Implementation.AutoMapperConfigMapper;
+using Controller.Implementation.v1;
 using Controller.Interface;
 using Microsoft.Practices.Unity;
 using ORM.Data;

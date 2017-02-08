@@ -138,9 +138,16 @@
     <Content Include="Global.asax" />
     <EmbeddedResource Include="swagger\index.html" />
     <EmbeddedResource Include="swagger\swagger.css" />
+    <Content Include="swagger\Controller.Implementation.XML">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="swagger\Dto.XML">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\ApiVersioningSelector.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Global.asax.cs">
@@ -229,7 +236,8 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>xcopy "$(SolutionDir)Controller\Controller.Implementation\bin\$(Configuration)\Controller.Implementation.XML" "$(ProjectDir)\swagger"  /Y</PreBuildEvent>
+    <PreBuildEvent>xcopy "$(SolutionDir)Controller\Controller.Implementation\bin\$(Configuration)\Controller.Implementation.XML" "$(ProjectDir)\swagger"  /Y
+xcopy "$(SolutionDir)Dto\Dto\bin\$(Configuration)\Dto.XML" "$(ProjectDir)\swagger"  /Y</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

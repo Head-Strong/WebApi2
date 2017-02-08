@@ -2,8 +2,8 @@ using System.Web.Http;
 using Swashbuckle.Application;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Web;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using Swashbuckle.Swagger;
 using System.Web.Http.Description;
 
@@ -40,20 +40,20 @@ namespace WebApplication1
                         // hold additional metadata for an API. Version and title are required but you can also provide
                         // additional fields by chaining methods off SingleApiVersion.
                         //
-                        c.SingleApiVersion("v1", "Customer Api");
+                        //c.SingleApiVersion("v1", "Customer Api");
 
                         // If your API has multiple versions, use "MultipleApiVersions" instead of "SingleApiVersion".
                         // In this case, you must provide a lambda that tells Swashbuckle which actions should be
                         // included in the docs for a given API version. Like "SingleApiVersion", each call to "Version"
                         // returns an "Info" builder so you can provide additional metadata per API version.
                         //
-                        //c.MultipleApiVersions(
-                        //    (apiDesc, targetApiVersion) => ResolveVersionSupportByRouteConstraint(apiDesc, targetApiVersion),
-                        //    (vc) =>
-                        //    {
-                        //        vc.Version("v2", "Swashbuckle Dummy API V2");
-                        //        vc.Version("v1", "Swashbuckle Dummy API V1");
-                        //    });
+                        c.MultipleApiVersions(
+                            VersionHelper.ResolveVersionSupportByControllerDescriptor,
+                            vc =>
+                            {
+                                vc.Version("v2", "Customer Api V2");
+                                vc.Version("v1", "Customer Api V1");
+                            });
 
                         // You can use "BasicAuth", "ApiKey" or "OAuth2" options to describe security schemes for the API.
                         // See https://github.com/swagger-api/swagger-spec/blob/master/versions/2.0.md for more details.
@@ -106,7 +106,7 @@ namespace WebApplication1
                         // more Xml comment files.
                         //
                         c.IncludeXmlComments(GetXmlCommentsPath());
-                        // c.IncludeXmlComments(GetDtoXmlCommentsPath());
+                        c.IncludeXmlComments(GetDtoXmlCommentsPath());
                         // Swashbuckle makes a best attempt at generating Swagger compliant JSON schemas for the various types
                         // exposed in your API. However, there may be occasions when more control of the output is needed.
                         // This is supported through the "MapType" and "SchemaFilter" options:
@@ -189,8 +189,8 @@ namespace WebApplication1
                         // The file must be included in your project as an "Embedded Resource", and then the resource's
                         // "Logical Name" is passed to the method as shown below.
                         //
-                        c.InjectStylesheet(thisAssembly, "WebApplication1.swagger.swagger.css");
-                        c.CustomAsset("index", thisAssembly, "WebApplication1.swagger.index.html");
+                        //c.InjectStylesheet(thisAssembly, "WebApplication1.swagger.swagger.css");
+                        //c.CustomAsset("index", thisAssembly, "WebApplication1.swagger.index.html");
 
                         // Use the "InjectJavaScript" option to invoke one or more custom JavaScripts after the swagger-ui
                         // has loaded. The file must be included in your project as an "Embedded Resource", and then the resource's
@@ -219,7 +219,7 @@ namespace WebApplication1
                         // Specify which HTTP operations will have the 'Try it out!' option. An empty paramter list disables
                         // it for all operations.
                         //
-                        c.SupportedSubmitMethods("GET", "HEAD");
+                        //c.SupportedSubmitMethods("GET", "HEAD");
 
                         // Use the CustomAsset option to provide your own version of assets used in the swagger-ui.
                         // It's typically used to instruct Swashbuckle to return your version instead of the default
@@ -254,6 +254,11 @@ namespace WebApplication1
                     });
         }
 
+        private static bool ResolveVersionSupportByRouteConstraint(ApiDescription apiDesc, string targetApiVersion)
+        {
+            return true;
+        }
+
         private static string GetRootUrlFromAppConfig()
         {
             return "http://localhost:2967/api/service";
@@ -261,12 +266,14 @@ namespace WebApplication1
 
         private static string GetXmlCommentsPath()
         {
-            return $@"{AppDomain.CurrentDomain.BaseDirectory}\bin\Controller.Implementation.XML";
+            var path= $@"{AppDomain.CurrentDomain.BaseDirectory}\bin\Controller.Implementation.XML";
+            return path;
         }
 
         private static string GetDtoXmlCommentsPath()
         {
-            return $@"{AppDomain.CurrentDomain.BaseDirectory}\bin\Dto.XML";
+            var path = $@"{AppDomain.CurrentDomain.BaseDirectory}\bin\Dto.XML";
+            return path;
         }
 
 
@@ -287,6 +294,21 @@ namespace WebApplication1
                 required = true,
                 type = "string"
             });
+        }
+    }
+
+    internal static class VersionHelper
+    {
+        private const string VersionRegex = @"v([\d]+)";
+
+        public static bool ResolveVersionSupportByControllerDescriptor(ApiDescription apiDesc, string targetApiVersion)
+        {
+            // remove any Version text from the tags
+            apiDesc.ActionDescriptor.ControllerDescriptor.ControllerName = Regex.Replace(apiDesc.ActionDescriptor.ControllerDescriptor.ControllerName, VersionRegex, string.Empty, RegexOptions.IgnoreCase);
+
+            // now filter out any controllers that aren't the target version
+            var controllerNamespace = apiDesc.ActionDescriptor.ControllerDescriptor.ControllerType.FullName;
+            return CultureInfo.InvariantCulture.CompareInfo.IndexOf(controllerNamespace, $".{targetApiVersion}.", CompareOptions.IgnoreCase) >= 0;
         }
     }
 }

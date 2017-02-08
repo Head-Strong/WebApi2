@@ -11,7 +11,7 @@ using Dto;
 using Service.Interface;
 using Swashbuckle.Swagger.Annotations;
 
-namespace Controller.Implementation
+namespace Controller.Implementation.v1
 {
     /// <summary>
     /// 
@@ -37,9 +37,9 @@ namespace Controller.Implementation
         /// </summary>
         /// <returns>Success Response</returns>
         [ResponseType(typeof(string))]
-        public IHttpActionResult GetData()
+        public virtual IHttpActionResult GetData()
         {
-            return Ok("Ok");
+            return Ok("Ok V1");
         }
 
         /// <summary>

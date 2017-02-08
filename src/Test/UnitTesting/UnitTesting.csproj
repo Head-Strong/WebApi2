@@ -79,6 +79,10 @@
       <Project>{5B70B3E9-0700-4CA2-9B96-DEB4A1214D30}</Project>
       <Name>Controller.Implementation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Controller\Controller.Interface\Controller.Interface.csproj">
+      <Project>{02B5C771-3BAA-4F9A-B05C-5629F3BDDC04}</Project>
+      <Name>Controller.Interface</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Extensibility\Custom.Filters\Custom.Filters.csproj">
       <Project>{1102D64D-D237-428B-8384-D2E0112D4752}</Project>
       <Name>Custom.Filters</Name>

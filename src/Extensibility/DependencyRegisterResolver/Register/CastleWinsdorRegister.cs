@@ -2,6 +2,7 @@
 using Castle.Windsor;
 using Controller.Implementation;
 using Controller.Implementation.AutoMapperConfigMapper;
+using Controller.Implementation.v1;
 using Controller.Interface;
 using ORM.Data;
 using Repository.Implementation.AutoMapperConfigMapper;

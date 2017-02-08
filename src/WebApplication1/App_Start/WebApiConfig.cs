@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.Http.Dispatcher;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.Filters;
 using Custom.Filters.Filters;
@@ -38,13 +39,13 @@ namespace WebApplication1
             RegisterFilters(config);
             ConfigureLoggers(config);
             SwaggerConfig.Register();
+
+            config.Services.Replace(typeof(IHttpControllerSelector), new ApiVersioningSelector((config)));
         }
 
         private static void ConfigureHandlers(HttpConfiguration config)
         {
-            var resolvedService = config.DependencyResolver.GetService(typeof(IService)) as IService;
             config.MessageHandlers.Add(new LoggingHandler(LoggerSetup));
-            config.MessageHandlers.Add(new AuthenticationHandler(resolvedService));
             config.Services.Replace(typeof(IExceptionHandler), new CustomExceptionHandler());
         }
 
@@ -56,14 +57,25 @@ namespace WebApplication1
 
         private static void MapRoutes(HttpConfiguration config)
         {
+
+            var resolvedService = config.DependencyResolver.GetService(typeof(IService)) as IService;
+            //config.MessageHandlers.Add(new AuthenticationHandler(resolvedService));
             // Web API routes
+
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
+               "Swagger",
+               "api/swagger/ui/{index}"
+           );
+
+            config.Routes.MapHttpRoute(
                 "DefaultApi",
-                "api/{controller}/{action}/{id}",
-                new { id = RouteParameter.Optional }
-            );
+                "api/{version}/{controller}/{action}/{id}",
+                new { id = RouteParameter.Optional },
+                constraints:null,                
+                handler: new AuthenticationHandler(resolvedService) { InnerHandler = new HttpControllerDispatcher(config) }            
+            );           
         }
 
         private static void ConatinerSetup(HttpConfiguration config)
